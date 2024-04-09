@@ -41,6 +41,7 @@ def plot_ADM_NoRaces(df):
     st.pyplot(plt)
 
 def plot_ADM_WithRaces(df):
+    st.subheader('Average Distance by Month With Races')
     df["Date"] = pd.to_datetime(df["Date"], format='%Y-%m-%d %H:%M:%S').dt.strftime('%Y-%m-%d')
     df["Distance"] = pd.to_numeric(df["Distance"], errors='coerce')
     df["Date"] = pd.to_datetime(df["Date"], format='%Y-%m-%d')
@@ -61,6 +62,7 @@ def plot_ADM_WithRaces(df):
     st.pyplot(plt)
     
 def plot_AHRD(df):
+    st.subheader('Average Heart Rate by Distance')
     rows_to_drop = [37, 69, 156, 170, 174, 181, 182, 793, 940]
     df = df.drop(index=rows_to_drop)
 
@@ -76,6 +78,7 @@ def plot_AHRD(df):
     st.pyplot(plt)
     
 def plot_AHRM(df):
+    st.subheader('Average Heart Rate by Month')
     df["Date"] = pd.to_datetime(df["Date"], format='%Y-%m-%d %H:%M:%S').dt.strftime('%Y-%m-%d')
     df["Date"] = pd.to_datetime(df["Date"], format='%Y-%m-%d')
 
@@ -104,6 +107,7 @@ def plot_AHRM(df):
     st.pyplot(plt)
     
 def plot_APM(df):
+    st.subheader('Average Pace by Month')
     df["Date"] = pd.to_datetime(df["Date"], format='%Y-%m-%d %H:%M:%S').dt.strftime('%Y-%m-%d')
     df["Date"] = pd.to_datetime(df["Date"], format='%Y-%m-%d')
 
@@ -123,6 +127,7 @@ def plot_APM(df):
     st.pyplot(plt)
     
 def plot_APMD_JustRaces(df):
+    st.subheader('Average Pace by Month & Distance Just Races')
     df["Date"] = pd.to_datetime(df["Date"], format='%Y-%m-%d %H:%M:%S').dt.strftime('%Y-%m-%d')
     df["Date"] = pd.to_datetime(df["Date"], format='%Y-%m-%d')
 
@@ -148,6 +153,7 @@ def plot_APMD_JustRaces(df):
     st.pyplot(plt)
     
 def plot_APM_JustMarathons(df):
+    st.subheader('Average Pace by Month Just Marathons')
     df["Date"] = pd.to_datetime(df["Date"], format='%Y-%m-%d %H:%M:%S').dt.strftime('%Y-%m-%d')
     df["Date"] = pd.to_datetime(df["Date"], format='%Y-%m-%d')
 
@@ -179,6 +185,7 @@ def plot_APM_JustMarathons(df):
     st.pyplot(plt)
     
 def plot_APM_NoRaces(df):
+    st.subheader('Average Pace by Month Without Races')
     df["Date"] = pd.to_datetime(df["Date"], format='%Y-%m-%d %H:%M:%S').dt.strftime('%Y-%m-%d')
     df["Date"] = pd.to_datetime(df["Date"], format='%Y-%m-%d')
 
@@ -203,7 +210,8 @@ def plot_APM_NoRaces(df):
     plt.show()
     st.pyplot(plt)
     
-def plot_APM_WithRaces(df):
+def plot_APM_JustRaces(df):
+    st.subheader('Average Pace by Month Just Races')
     df["Date"] = pd.to_datetime(df["Date"], format='%Y-%m-%d %H:%M:%S').dt.strftime('%Y-%m-%d')
     df["Date"] = pd.to_datetime(df["Date"], format='%Y-%m-%d')
 
@@ -255,7 +263,7 @@ def main():
             plot_APMD_JustRaces(df)
             plot_APM_JustMarathons(df)
             plot_APM_NoRaces(df)
-            plot_APM_WithRaces(df)
+            plot_APM_JustRaces(df)
         except Exception as e:
             st.error(f'Error: {e}')
 
