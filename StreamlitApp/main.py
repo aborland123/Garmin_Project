@@ -107,10 +107,12 @@ def plot_APM(df):
     df["Date"] = pd.to_datetime(df["Date"], format='%Y-%m-%d %H:%M:%S').dt.strftime('%Y-%m-%d')
     df["Date"] = pd.to_datetime(df["Date"], format='%Y-%m-%d')
 
-
+    df.replace("--", pd.NA, inplace=True)
+    df = df.dropna()
     df["Avg Pace"] = df["Avg Pace"].str.replace(":", "")
     df = df.astype({"Avg Pace":int})
     monthly_avg_pace = df.groupby(df["Date"].dt.to_period("M"))["Avg Pace"].mean()
+    df = df.astype({"Avg Pace":str})
 
     plt.figure(figsize=(10, 6))
     monthly_avg_pace.plot(kind="bar", color="blue")
@@ -182,10 +184,13 @@ def plot_APM_NoRaces(df):
     mask = ~df['Title'].str.contains('|'.join(keywords_to_remove), case=False)
     df = df[mask]
 
+    df.replace("--", pd.NA, inplace=True)
+    df = df.dropna()
     df["Avg Pace"] = df["Avg Pace"].str.replace(":", "")
     df = df.astype({"Avg Pace":int})
 
     monthly_avg_pace = df.groupby(df["Date"].dt.to_period("M"))["Avg Pace"].mean()
+    df = df.astype({"Avg Pace":str})
 
     plt.figure(figsize=(10, 6))
     monthly_avg_pace.plot(kind="bar", color="blue")
@@ -205,10 +210,13 @@ def plot_APM_JustRaces(df):
     mask = df['Title'].str.contains('|'.join(keywords_to_include), case=False)
     df = df[mask]
 
+    df.replace("--", pd.NA, inplace=True)
+    df = df.dropna()
     df["Avg Pace"] = df["Avg Pace"].str.replace(":", "")
     df = df.astype({"Avg Pace":int})
 
     monthly_avg_pace = df.groupby(df["Date"].dt.to_period("M"))["Avg Pace"].mean()
+    df = df.astype({"Avg Pace":str})
 
     plt.figure(figsize=(10, 6))
     monthly_avg_pace.plot(kind="bar", color="blue")
@@ -231,10 +239,27 @@ def main():
             df = pd.read_csv(uploaded_file)
             st.success('File successfully uploaded and read.')
             df = df.iloc[0:]         
+            cleaned_df = df.dropna()
 
             # Display DataFrame
-            st.write('**DataFrame:**')
-            st.write(df.head())
+            #st.write('**DataFrame:**')
+            #st.write(df.head())
+
+            # turning them to types I need
+            df['Time'] = pd.to_timedelta(df['Time'], errors='coerce').dt.total_seconds() / 3600  # Convert time to hours
+            df['Avg HR'] = pd.to_numeric(df['Avg HR'], errors='coerce')
+
+
+            # KPI Metrics
+            st.header("Running Metrics Overview")
+            kpi1, kpi2, kpi3 = st.columns(3)
+
+            with kpi1:
+                st.metric(label="Total Distance (Miles)", value="{:,.0f}".format(df['Distance'].sum()))
+            with kpi2:
+                st.metric(label="Total Time (Hours)", value="{:,.0f}".format(df['Time'].sum()))
+            with kpi3:
+                st.metric(label="Total Average Heart Rate", value="{:,.0f}".format(df['Avg HR'].mean()))
 
             # Plot graphs
             plot_ADM(df)
