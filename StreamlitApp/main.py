@@ -245,6 +245,7 @@ def main():
     if uploaded_file is not None:
         # Read CSV file
         try:
+            #df = pd.read_csv(uploaded_file, skiprows=1)
             df = pd.read_csv(uploaded_file, skiprows=1)
             st.success('File successfully uploaded and read.')
             df = df.iloc[0:]         
