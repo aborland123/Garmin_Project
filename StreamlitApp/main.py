@@ -63,8 +63,6 @@ def plot_ADM_WithRaces(df):
     
 def plot_AHRD(df):
     st.subheader('Average Heart Rate by Distance')
-    rows_to_drop = [37, 69, 156, 170, 174, 181, 182, 793, 940]
-    df = df.drop(index=rows_to_drop)
 
     df["Avg HR"] = pd.to_numeric(df["Avg HR"], errors='coerce')
     df = df.dropna(subset=["Avg HR"])
@@ -82,8 +80,6 @@ def plot_AHRM(df):
     df["Date"] = pd.to_datetime(df["Date"], format='%Y-%m-%d %H:%M:%S').dt.strftime('%Y-%m-%d')
     df["Date"] = pd.to_datetime(df["Date"], format='%Y-%m-%d')
 
-    rows_to_drop = [37, 69, 156, 170, 174, 181, 182, 793, 940]
-    df = df.drop(index=rows_to_drop)
     keywords_to_include = ['Marathon']
 
     mask = df['Title'].str.contains('|'.join(keywords_to_include), case=False)
@@ -111,8 +107,6 @@ def plot_APM(df):
     df["Date"] = pd.to_datetime(df["Date"], format='%Y-%m-%d %H:%M:%S').dt.strftime('%Y-%m-%d')
     df["Date"] = pd.to_datetime(df["Date"], format='%Y-%m-%d')
 
-    rows_to_drop = [37, 69, 156, 170, 174, 181, 182, 793, 940]
-    df = df.drop(index=rows_to_drop)
 
     df["Avg Pace"] = df["Avg Pace"].str.replace(":", "")
     df = df.astype({"Avg Pace":int})
@@ -130,9 +124,6 @@ def plot_APMD_JustRaces(df):
     st.subheader('Average Pace by Month & Distance Just Races')
     df["Date"] = pd.to_datetime(df["Date"], format='%Y-%m-%d %H:%M:%S').dt.strftime('%Y-%m-%d')
     df["Date"] = pd.to_datetime(df["Date"], format='%Y-%m-%d')
-
-    rows_to_drop = [37, 69, 156, 170, 174, 181, 182, 793, 940]
-    df = df.drop(index=rows_to_drop)
 
     keywords_to_include = ['Marathon', '5k', 'Race', 'Jim', 'Half']
 
@@ -156,9 +147,6 @@ def plot_APM_JustMarathons(df):
     st.subheader('Average Pace by Month Just Marathons')
     df["Date"] = pd.to_datetime(df["Date"], format='%Y-%m-%d %H:%M:%S').dt.strftime('%Y-%m-%d')
     df["Date"] = pd.to_datetime(df["Date"], format='%Y-%m-%d')
-
-    rows_to_drop = [37, 69, 156, 170, 174, 181, 182, 793, 940]
-    df = df.drop(index=rows_to_drop)
 
     keywords_to_include = ['Marathon']
 
@@ -189,9 +177,6 @@ def plot_APM_NoRaces(df):
     df["Date"] = pd.to_datetime(df["Date"], format='%Y-%m-%d %H:%M:%S').dt.strftime('%Y-%m-%d')
     df["Date"] = pd.to_datetime(df["Date"], format='%Y-%m-%d')
 
-    rows_to_drop = [37, 69, 156, 170, 174, 181, 182, 793, 940]
-    df = df.drop(index=rows_to_drop)
-
     keywords_to_remove = ['Marathon', '5k', 'Race', 'Jim', 'Half']
 
     mask = ~df['Title'].str.contains('|'.join(keywords_to_remove), case=False)
@@ -214,9 +199,6 @@ def plot_APM_JustRaces(df):
     st.subheader('Average Pace by Month Just Races')
     df["Date"] = pd.to_datetime(df["Date"], format='%Y-%m-%d %H:%M:%S').dt.strftime('%Y-%m-%d')
     df["Date"] = pd.to_datetime(df["Date"], format='%Y-%m-%d')
-
-    rows_to_drop = [37, 69, 156, 170, 174, 181, 182, 793, 940]
-    df = df.drop(index=rows_to_drop)
 
     keywords_to_include = ['Marathon', '5k', 'Race', 'Jim', 'Half']
 
