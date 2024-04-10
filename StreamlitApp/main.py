@@ -1,25 +1,20 @@
 import streamlit as st
 import matplotlib.pyplot as plt
 import pandas as pd
+import plotly.express as px
+import plotly.graph_objects as go
 
-def plot_ADM(df):
-    st.subheader('Average Distance by Month')
+def plot_AD(df):
 
     df["Date"] = pd.to_datetime(df["Date"], format='%Y-%m-%d %H:%M:%S').dt.strftime('%Y-%m-%d')
     df["Distance"] = pd.to_numeric(df["Distance"], errors='coerce')
     df["Date"] = pd.to_datetime(df["Date"], format='%Y-%m-%d')
 
-    monthly_avg_distance = df.groupby(df["Date"].dt.to_period("M"))["Distance"].sum()
-    plt.figure(figsize=(10, 6))
-    monthly_avg_distance.plot(kind="bar", color="blue")
-    plt.title("Average Distance by Month")
-    plt.xlabel("Month")
-    plt.ylabel("Average Distance")
-    plt.show()
-    st.pyplot(plt)
+    fig1 = px.line(df, x='Date', y='Distance', title="Average Distance")
+    st.plotly_chart(fig1)
 
-def plot_ADM_NoRaces(df):
-    st.subheader('Average Distance by Month Without Races')
+
+def plot_ADM_JustRaces(df):
 
     df["Date"] = pd.to_datetime(df["Date"], format='%Y-%m-%d %H:%M:%S').dt.strftime('%Y-%m-%d')
     df["Distance"] = pd.to_numeric(df["Distance"], errors='coerce')
@@ -29,54 +24,37 @@ def plot_ADM_NoRaces(df):
 
     mask = ~df['Title'].str.contains('|'.join(keywords_to_remove), case=False)
     df = df[mask]
-    monthly_avg_pace = df.groupby(df["Date"].dt.to_period("M"))["Distance"].sum()
+    monthly_avg_dist = df.groupby(df["Date"].dt.to_period("M"))["Distance"].sum()
+
+    fig2 = px.bar(x=monthly_avg_dist.index.astype(str), y=monthly_avg_dist.values, title="Average Distance by Month Just Races", labels={'x':'Month', 'y':'Distance'}, color_discrete_sequence=['light blue'])
+    st.plotly_chart(fig2)
 
 
-    plt.figure(figsize=(10, 6))
-    monthly_avg_pace.plot(kind="bar", color="blue")
-    plt.title("Average Distance by Month W/O Races")
-    plt.xlabel("Month")
-    plt.ylabel("Average Distance")
-    plt.show()
-    st.pyplot(plt)
-
-def plot_ADM_WithRaces(df):
-    st.subheader('Average Distance by Month With Races')
+def plot_ADM_NoRaces(df):
     df["Date"] = pd.to_datetime(df["Date"], format='%Y-%m-%d %H:%M:%S').dt.strftime('%Y-%m-%d')
     df["Distance"] = pd.to_numeric(df["Distance"], errors='coerce')
     df["Date"] = pd.to_datetime(df["Date"], format='%Y-%m-%d')
 
     keywords_to_remove = ['Marathon', '5k', 'Race', 'Jim', 'Half']
 
+    #removes these values
     mask = df['Title'].str.contains('|'.join(keywords_to_remove), case=False)
     df = df[mask]
-
     monthly_avg_pace = df.groupby(df["Date"].dt.to_period("M"))["Distance"].sum()
+    
+    fig3 = px.bar(x=monthly_avg_pace.index.astype(str), y=monthly_avg_pace.values, title="Average Distance by Month (Practice/Workout)", labels={'x':'Month', 'y':'Distance'}, color_discrete_sequence=['light blue'])
+    st.plotly_chart(fig3)
 
-    plt.figure(figsize=(10, 6))
-    monthly_avg_pace.plot(kind="bar", color="blue")
-    plt.title("Average Distance by Month With Races")
-    plt.xlabel("Month")
-    plt.ylabel("Average Distance")
-    plt.show()
-    st.pyplot(plt)
     
 def plot_AHRD(df):
-    st.subheader('Average Heart Rate by Distance')
-
     df["Avg HR"] = pd.to_numeric(df["Avg HR"], errors='coerce')
     df = df.dropna(subset=["Avg HR"])
 
-    plt.figure(figsize=(10, 6))
-    plt.scatter(df["Avg HR"], df["Distance"], color="blue", alpha=0.5)
-    plt.title("Average HR by Distance")
-    plt.xlabel("Avg HR")
-    plt.ylabel("Distance")
-    plt.show()
-    st.pyplot(plt)
+    fig4 = px.line(df, x='Avg HR', y='Distance', title="Average Heart Rate by Distance")
+    st.plotly_chart(fig4)
+
     
 def plot_AHRM(df):
-    st.subheader('Average Heart Rate by Month')
     df["Date"] = pd.to_datetime(df["Date"], format='%Y-%m-%d %H:%M:%S').dt.strftime('%Y-%m-%d')
     df["Date"] = pd.to_datetime(df["Date"], format='%Y-%m-%d')
 
@@ -93,17 +71,12 @@ def plot_AHRM(df):
     df = df.dropna(subset=["Avg HR"])
     monthly_avg_hr = df.groupby(df["Date"].dt.to_period("M"))["Avg HR"].mean()
 
+    fig5 = px.bar(x=monthly_avg_hr.index.astype(str), y=monthly_avg_hr.values, title="Average Heart Rate by Month JUST Marathons", labels={'x':'Month', 'y':'Average Heart Rate'}, color_discrete_sequence=['light blue'])
+    st.plotly_chart(fig5)
+    
 
-    plt.figure(figsize=(10, 6))
-    monthly_avg_hr.plot(kind="bar", color="blue")
-    plt.title("Average HR by Month JUST Marathons")
-    plt.xlabel("Month")
-    plt.ylabel("Average HR")
-    plt.show()
-    st.pyplot(plt)
     
 def plot_APM(df):
-    st.subheader('Average Pace by Month')
     df["Date"] = pd.to_datetime(df["Date"], format='%Y-%m-%d %H:%M:%S').dt.strftime('%Y-%m-%d')
     df["Date"] = pd.to_datetime(df["Date"], format='%Y-%m-%d')
 
@@ -114,16 +87,11 @@ def plot_APM(df):
     monthly_avg_pace = df.groupby(df["Date"].dt.to_period("M"))["Avg Pace"].mean()
     df = df.astype({"Avg Pace":str})
 
-    plt.figure(figsize=(10, 6))
-    monthly_avg_pace.plot(kind="bar", color="blue")
-    plt.title("Average Pace by Month")
-    plt.xlabel("Month")
-    plt.ylabel("Average Pace")
-    plt.show()
-    st.pyplot(plt)
+    fig6 = px.bar(x=monthly_avg_pace.index.astype(str), y=monthly_avg_pace.values, title="Average Pace by Month", labels={'x':'Month', 'y':'Average Pace'}, color_discrete_sequence=['light blue'])
+    st.plotly_chart(fig6)
+
     
 def plot_APMD_JustRaces(df):
-    st.subheader('Average Pace by Month & Distance Just Races')
     df["Date"] = pd.to_datetime(df["Date"], format='%Y-%m-%d %H:%M:%S').dt.strftime('%Y-%m-%d')
     df["Date"] = pd.to_datetime(df["Date"], format='%Y-%m-%d')
 
@@ -136,17 +104,12 @@ def plot_APMD_JustRaces(df):
     df = df.astype({"Avg Pace":int})
     monthly_avg_pace = df.groupby(df["Date"].dt.to_period("M"))["Avg Pace"].mean()
 
-    plt.figure(figsize=(10, 6))
-    plt.scatter(df["Date"], df["Distance"], c=df["Avg Pace"], cmap='viridis', alpha=0.7)
-    plt.title("Scatter Plot of Avg Pace vs Distance vs. Date with Distance as Color")
-    plt.xlabel("Date")
-    plt.ylabel("Distance")
-    plt.colorbar(label="Avg Pace")
-    plt.show()
-    st.pyplot(plt)
+    fig7 = px.scatter(df, x='Date', y=['Distance', 'Avg Pace'], title="Average Pace by Month & Distance Just Races")
+    st.plotly_chart(fig7)
+
+
     
 def plot_APM_JustMarathons(df):
-    st.subheader('Average Pace by Month Just Marathons')
     df["Date"] = pd.to_datetime(df["Date"], format='%Y-%m-%d %H:%M:%S').dt.strftime('%Y-%m-%d')
     df["Date"] = pd.to_datetime(df["Date"], format='%Y-%m-%d')
 
@@ -165,17 +128,11 @@ def plot_APM_JustMarathons(df):
 
     monthly_avg_pace = df.groupby(df["Date"].dt.to_period("D"))["Avg Pace"].mean()
 
+    fig8 = px.bar(x=monthly_avg_pace.index.astype(str), y=monthly_avg_pace.values, title="Average Pace by Month JUST Marathons", labels={'x':'Month', 'y':'Average Pace'}, color_discrete_sequence=['light blue'])
+    st.plotly_chart(fig8)
 
-    plt.figure(figsize=(10, 6))
-    monthly_avg_pace.plot(kind="bar", color="blue")
-    plt.title("Average Pace by Month JUST Marathons")
-    plt.xlabel("Month")
-    plt.ylabel("Average Pace")
-    plt.show()
-    st.pyplot(plt)
     
 def plot_APM_NoRaces(df):
-    st.subheader('Average Pace by Month Without Races')
     df["Date"] = pd.to_datetime(df["Date"], format='%Y-%m-%d %H:%M:%S').dt.strftime('%Y-%m-%d')
     df["Date"] = pd.to_datetime(df["Date"], format='%Y-%m-%d')
 
@@ -192,16 +149,12 @@ def plot_APM_NoRaces(df):
     monthly_avg_pace = df.groupby(df["Date"].dt.to_period("M"))["Avg Pace"].mean()
     df = df.astype({"Avg Pace":str})
 
-    plt.figure(figsize=(10, 6))
-    monthly_avg_pace.plot(kind="bar", color="blue")
-    plt.title("Average Pace by Month W/O Races")
-    plt.xlabel("Month")
-    plt.ylabel("Average Pace")
-    plt.show()
-    st.pyplot(plt)
+    fig9 = px.bar(x=monthly_avg_pace.index.astype(str), y=monthly_avg_pace.values, title="Average Pace by Month (Practice/Workout)", labels={'x':'Month', 'y':'Distance'}, color_discrete_sequence=['light blue'])
+    st.plotly_chart(fig9)
+
+
     
 def plot_APM_JustRaces(df):
-    st.subheader('Average Pace by Month Just Races')
     df["Date"] = pd.to_datetime(df["Date"], format='%Y-%m-%d %H:%M:%S').dt.strftime('%Y-%m-%d')
     df["Date"] = pd.to_datetime(df["Date"], format='%Y-%m-%d')
 
@@ -218,13 +171,9 @@ def plot_APM_JustRaces(df):
     monthly_avg_pace = df.groupby(df["Date"].dt.to_period("M"))["Avg Pace"].mean()
     df = df.astype({"Avg Pace":str})
 
-    plt.figure(figsize=(10, 6))
-    monthly_avg_pace.plot(kind="bar", color="blue")
-    plt.title("Average Pace by Month JUST Races")
-    plt.xlabel("Month")
-    plt.ylabel("Average Pace")
-    plt.show()
-    st.pyplot(plt)
+    fig10 = px.bar(x=monthly_avg_pace.index.astype(str), y=monthly_avg_pace.values, title="Average Pace by Month Just Races", labels={'x':'Month', 'y':'Average Pace'}, color_discrete_sequence=['light blue'])
+    st.plotly_chart(fig10)
+
     
 def main():
     st.title('Garmin CSV Reader and Graph Plotter')
@@ -239,11 +188,11 @@ def main():
             df = pd.read_csv(uploaded_file)
             st.success('File successfully uploaded and read.')
             df = df.iloc[0:]         
-            cleaned_df = df.dropna()
+            df = df.dropna()
 
             # Display DataFrame
-            #st.write('**DataFrame:**')
-            #st.write(df.head())
+            st.write('**DataFrame:**')
+            st.write(df.head())
 
             # turning them to types I need
             df['Time'] = pd.to_timedelta(df['Time'], errors='coerce').dt.total_seconds() / 3600  # Convert time to hours
@@ -261,10 +210,12 @@ def main():
             with kpi3:
                 st.metric(label="Total Average Heart Rate", value="{:,.0f}".format(df['Avg HR'].mean()))
 
+            st.header('Graphs:')
+
             # Plot graphs
-            plot_ADM(df)
+            plot_AD(df)
+            plot_ADM_JustRaces(df)
             plot_ADM_NoRaces(df)
-            plot_ADM_WithRaces(df)
             plot_AHRD(df)
             plot_AHRM(df)
             plot_APM(df)
@@ -277,4 +228,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-
