@@ -80,10 +80,12 @@ def plot_APM(df):
     df["Date"] = pd.to_datetime(df["Date"], format='%Y-%m-%d %H:%M:%S').dt.strftime('%Y-%m-%d')
     df["Date"] = pd.to_datetime(df["Date"], format='%Y-%m-%d')
 
-    df.replace("--", pd.NA, inplace=True)
-    df = df.dropna()
+    df["Avg Pace"].replace("--", pd.NA, inplace=True)
+    df.dropna(subset=["Avg Pace"], inplace=True)
+
     df["Avg Pace"] = df["Avg Pace"].str.replace(":", "")
     df = df.astype({"Avg Pace":int})
+    df["Avg Pace"] = df["Avg Pace"]/100
     monthly_avg_pace = df.groupby(df["Date"].dt.to_period("M"))["Avg Pace"].mean()
     df = df.astype({"Avg Pace":str})
 
@@ -102,16 +104,19 @@ def plot_APMD_JustRaces(df):
 
     df["Avg Pace"] = df["Avg Pace"].str.replace(":", "")
     df = df.astype({"Avg Pace":int})
+    df["Avg Pace"] = df["Avg Pace"]/100
     monthly_avg_pace = df.groupby(df["Date"].dt.to_period("M"))["Avg Pace"].mean()
 
-    fig7 = px.scatter(df, x='Date', y=['Distance', 'Avg Pace'], title="Average Pace by Month & Distance Just Races")
+    fig7 = px.bar(x=monthly_avg_pace.index.astype(str), y=monthly_avg_pace.values, title="Average Pace by Month & Distance Just Races (No Workouts)", labels={'x':'Month', 'y':'Average Pace'}, color_discrete_sequence=['light blue'])
     st.plotly_chart(fig7)
-
 
     
 def plot_APM_JustMarathons(df):
     df["Date"] = pd.to_datetime(df["Date"], format='%Y-%m-%d %H:%M:%S').dt.strftime('%Y-%m-%d')
     df["Date"] = pd.to_datetime(df["Date"], format='%Y-%m-%d')
+
+    df["Avg Pace"].replace("--", pd.NA, inplace=True)
+    df.dropna(subset=["Avg Pace"], inplace=True)
 
     keywords_to_include = ['Marathon']
 
@@ -125,6 +130,7 @@ def plot_APM_JustMarathons(df):
 
     df["Avg Pace"] = df["Avg Pace"].str.replace(":", "")
     df = df.astype({"Avg Pace":int})
+    df["Avg Pace"] = df["Avg Pace"]/100
 
     monthly_avg_pace = df.groupby(df["Date"].dt.to_period("D"))["Avg Pace"].mean()
 
@@ -136,20 +142,23 @@ def plot_APM_NoRaces(df):
     df["Date"] = pd.to_datetime(df["Date"], format='%Y-%m-%d %H:%M:%S').dt.strftime('%Y-%m-%d')
     df["Date"] = pd.to_datetime(df["Date"], format='%Y-%m-%d')
 
+    df["Avg Pace"].replace("--", pd.NA, inplace=True)
+    df.dropna(subset=["Avg Pace"], inplace=True)
+
     keywords_to_remove = ['Marathon', '5k', 'Race', 'Jim', 'Half']
 
     mask = ~df['Title'].str.contains('|'.join(keywords_to_remove), case=False)
     df = df[mask]
 
-    df.replace("--", pd.NA, inplace=True)
-    df = df.dropna()
+    
     df["Avg Pace"] = df["Avg Pace"].str.replace(":", "")
     df = df.astype({"Avg Pace":int})
+    df["Avg Pace"] = df["Avg Pace"]/100
 
     monthly_avg_pace = df.groupby(df["Date"].dt.to_period("M"))["Avg Pace"].mean()
     df = df.astype({"Avg Pace":str})
 
-    fig9 = px.bar(x=monthly_avg_pace.index.astype(str), y=monthly_avg_pace.values, title="Average Pace by Month (Practice/Workout)", labels={'x':'Month', 'y':'Distance'}, color_discrete_sequence=['light blue'])
+    fig9 = px.bar(x=monthly_avg_pace.index.astype(str), y=monthly_avg_pace.values, title="Average Pace by Month (Practice/Workout)", labels={'x':'Month', 'y':'Average Pace'}, color_discrete_sequence=['light blue'])
     st.plotly_chart(fig9)
 
 
@@ -158,20 +167,22 @@ def plot_APM_JustRaces(df):
     df["Date"] = pd.to_datetime(df["Date"], format='%Y-%m-%d %H:%M:%S').dt.strftime('%Y-%m-%d')
     df["Date"] = pd.to_datetime(df["Date"], format='%Y-%m-%d')
 
+    df["Avg Pace"].replace("--", pd.NA, inplace=True)
+    df.dropna(subset=["Avg Pace"], inplace=True)
+
     keywords_to_include = ['Marathon', '5k', 'Race', 'Jim', 'Half']
 
     mask = df['Title'].str.contains('|'.join(keywords_to_include), case=False)
     df = df[mask]
 
-    df.replace("--", pd.NA, inplace=True)
-    df = df.dropna()
     df["Avg Pace"] = df["Avg Pace"].str.replace(":", "")
     df = df.astype({"Avg Pace":int})
+    df["Avg Pace"] = df["Avg Pace"]/100
 
     monthly_avg_pace = df.groupby(df["Date"].dt.to_period("M"))["Avg Pace"].mean()
     df = df.astype({"Avg Pace":str})
 
-    fig10 = px.bar(x=monthly_avg_pace.index.astype(str), y=monthly_avg_pace.values, title="Average Pace by Month Just Races", labels={'x':'Month', 'y':'Average Pace'}, color_discrete_sequence=['light blue'])
+    fig10 = px.bar(x=monthly_avg_pace.index.astype(str), y=monthly_avg_pace.values, title="Average Pace by Month Just Races", labels={'x':'Date', 'y':'Average Pace'}, color_discrete_sequence=['light blue'])
     st.plotly_chart(fig10)
 
     
@@ -189,10 +200,6 @@ def main():
             st.success('File successfully uploaded and read.')
             df = df.iloc[0:]         
             df = df.dropna()
-
-            # Display DataFrame
-            st.write('**DataFrame:**')
-            st.write(df.head())
 
             # turning them to types I need
             df['Time'] = pd.to_timedelta(df['Time'], errors='coerce').dt.total_seconds() / 3600  # Convert time to hours
