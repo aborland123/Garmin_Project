@@ -189,7 +189,6 @@ def plot_APM_JustRaces(df):
 def main():
     st.title('Garmin CSV Reader and Graph Plotter')
     st.write('Upload your CSV and the graphs will be created!')
-    st.write('Alli was here.')
     # File upload
     uploaded_file = st.file_uploader('Upload CSV file', type=['csv'])
 
