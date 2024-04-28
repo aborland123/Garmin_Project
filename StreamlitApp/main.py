@@ -5,6 +5,7 @@ import plotly.express as px
 import plotly.graph_objects as go
 
 def plot_AD(df):
+
     df["Date"] = pd.to_datetime(df["Date"], format='%Y-%m-%d %H:%M:%S').dt.strftime('%Y-%m-%d')
     df["Distance"] = pd.to_numeric(df["Distance"], errors='coerce')
     df["Date"] = pd.to_datetime(df["Date"], format='%Y-%m-%d')
@@ -14,6 +15,7 @@ def plot_AD(df):
 
 
 def plot_ADM_JustRaces(df):
+
     df["Date"] = pd.to_datetime(df["Date"], format='%Y-%m-%d %H:%M:%S').dt.strftime('%Y-%m-%d')
     df["Distance"] = pd.to_numeric(df["Distance"], errors='coerce')
     df["Date"] = pd.to_datetime(df["Date"], format='%Y-%m-%d')
@@ -21,7 +23,7 @@ def plot_ADM_JustRaces(df):
     keywords_to_remove = ['Marathon', '5k', 'Race', 'Jim', 'Half']
 
     mask = ~df['Title'].str.contains('|'.join(keywords_to_remove), case=False)
-    df = df.loc[mask].copy()
+    df = df[mask]
     monthly_avg_dist = df.groupby(df["Date"].dt.to_period("M"))["Distance"].sum()
 
     fig2 = px.bar(x=monthly_avg_dist.index.astype(str), y=monthly_avg_dist.values, title="Average Distance by Month Just Races", labels={'x':'Month', 'y':'Distance'}, color_discrete_sequence=['light blue'])
@@ -35,8 +37,9 @@ def plot_ADM_NoRaces(df):
 
     keywords_to_remove = ['Marathon', '5k', 'Race', 'Jim', 'Half']
 
+    #removes these values
     mask = df['Title'].str.contains('|'.join(keywords_to_remove), case=False)
-    df = df.loc[~mask].copy()
+    df = df[mask]
     monthly_avg_pace = df.groupby(df["Date"].dt.to_period("M"))["Distance"].sum()
     
     fig3 = px.bar(x=monthly_avg_pace.index.astype(str), y=monthly_avg_pace.values, title="Average Distance by Month (Practice/Workout)", labels={'x':'Month', 'y':'Distance'}, color_discrete_sequence=['light blue'])
@@ -58,11 +61,11 @@ def plot_AHRM(df):
     keywords_to_include = ['Marathon']
 
     mask = df['Title'].str.contains('|'.join(keywords_to_include), case=False)
-    df = df.loc[mask].copy()
+    df = df[mask]
     keywords_to_remove = ['half']
 
     mask = ~df['Title'].str.contains('|'.join(keywords_to_remove), case=False)
-    df = df.loc[mask].copy()
+    df = df[mask]
 
     df["Avg HR"] = pd.to_numeric(df["Avg HR"], errors='coerce')
     df = df.dropna(subset=["Avg HR"])
@@ -72,6 +75,7 @@ def plot_AHRM(df):
     st.plotly_chart(fig5)
     
 
+    
 def plot_APM(df):
     df["Date"] = pd.to_datetime(df["Date"], format='%Y-%m-%d %H:%M:%S').dt.strftime('%Y-%m-%d')
     df["Date"] = pd.to_datetime(df["Date"], format='%Y-%m-%d')
@@ -80,9 +84,10 @@ def plot_APM(df):
     df.dropna(subset=["Avg Pace"], inplace=True)
 
     df["Avg Pace"] = df["Avg Pace"].str.replace(":", "")
-    df["Avg Pace"] = pd.to_numeric(df["Avg Pace"], errors='coerce') / 100
-
+    df = df.astype({"Avg Pace":int})
+    df["Avg Pace"] = df["Avg Pace"]/100
     monthly_avg_pace = df.groupby(df["Date"].dt.to_period("M"))["Avg Pace"].mean()
+    df = df.astype({"Avg Pace":str})
 
     fig6 = px.bar(x=monthly_avg_pace.index.astype(str), y=monthly_avg_pace.values, title="Average Pace by Month", labels={'x':'Month', 'y':'Average Pace'}, color_discrete_sequence=['light blue'])
     st.plotly_chart(fig6)
@@ -95,11 +100,11 @@ def plot_APMD_JustRaces(df):
     keywords_to_include = ['Marathon', '5k', 'Race', 'Jim', 'Half']
 
     mask = df['Title'].str.contains('|'.join(keywords_to_include), case=False)
-    df = df.loc[mask].copy()
+    df = df[mask]
 
     df["Avg Pace"] = df["Avg Pace"].str.replace(":", "")
-    df["Avg Pace"] = pd.to_numeric(df["Avg Pace"], errors='coerce') / 100
-
+    df = df.astype({"Avg Pace":int})
+    df["Avg Pace"] = df["Avg Pace"]/100
     monthly_avg_pace = df.groupby(df["Date"].dt.to_period("M"))["Avg Pace"].mean()
 
     fig7 = px.bar(x=monthly_avg_pace.index.astype(str), y=monthly_avg_pace.values, title="Average Pace by Month & Distance Just Races (No Workouts)", labels={'x':'Month', 'y':'Average Pace'}, color_discrete_sequence=['light blue'])
@@ -116,15 +121,16 @@ def plot_APM_JustMarathons(df):
     keywords_to_include = ['Marathon']
 
     mask = df['Title'].str.contains('|'.join(keywords_to_include), case=False)
-    df = df.loc[mask].copy()
+    df = df[mask]
 
     keywords_to_remove = ['half']
 
     mask = ~df['Title'].str.contains('|'.join(keywords_to_remove), case=False)
-    df = df.loc[mask].copy()
+    df = df[mask]
 
     df["Avg Pace"] = df["Avg Pace"].str.replace(":", "")
-    df["Avg Pace"] = pd.to_numeric(df["Avg Pace"], errors='coerce') / 100
+    df = df.astype({"Avg Pace":int})
+    df["Avg Pace"] = df["Avg Pace"]/100
 
     monthly_avg_pace = df.groupby(df["Date"].dt.to_period("D"))["Avg Pace"].mean()
 
@@ -142,17 +148,21 @@ def plot_APM_NoRaces(df):
     keywords_to_remove = ['Marathon', '5k', 'Race', 'Jim', 'Half']
 
     mask = ~df['Title'].str.contains('|'.join(keywords_to_remove), case=False)
-    df = df.loc[mask].copy()
+    df = df[mask]
 
+    
     df["Avg Pace"] = df["Avg Pace"].str.replace(":", "")
-    df["Avg Pace"] = pd.to_numeric(df["Avg Pace"], errors='coerce') / 100
+    df = df.astype({"Avg Pace":int})
+    df["Avg Pace"] = df["Avg Pace"]/100
 
     monthly_avg_pace = df.groupby(df["Date"].dt.to_period("M"))["Avg Pace"].mean()
+    df = df.astype({"Avg Pace":str})
 
     fig9 = px.bar(x=monthly_avg_pace.index.astype(str), y=monthly_avg_pace.values, title="Average Pace by Month (Practice/Workout)", labels={'x':'Month', 'y':'Average Pace'}, color_discrete_sequence=['light blue'])
     st.plotly_chart(fig9)
 
 
+    
 def plot_APM_JustRaces(df):
     df["Date"] = pd.to_datetime(df["Date"], format='%Y-%m-%d %H:%M:%S').dt.strftime('%Y-%m-%d')
     df["Date"] = pd.to_datetime(df["Date"], format='%Y-%m-%d')
@@ -163,15 +173,53 @@ def plot_APM_JustRaces(df):
     keywords_to_include = ['Marathon', '5k', 'Race', 'Jim', 'Half']
 
     mask = df['Title'].str.contains('|'.join(keywords_to_include), case=False)
-    df = df.loc[mask].copy()
+    df = df[mask]
 
     df["Avg Pace"] = df["Avg Pace"].str.replace(":", "")
-    df["Avg Pace"] = pd.to_numeric(df["Avg Pace"], errors='coerce') / 100
+    df = df.astype({"Avg Pace":int})
+    df["Avg Pace"] = df["Avg Pace"]/100
 
     monthly_avg_pace = df.groupby(df["Date"].dt.to_period("M"))["Avg Pace"].mean()
+    df = df.astype({"Avg Pace":str})
 
     fig10 = px.bar(x=monthly_avg_pace.index.astype(str), y=monthly_avg_pace.values, title="Average Pace by Month Just Races", labels={'x':'Date', 'y':'Average Pace'}, color_discrete_sequence=['light blue'])
     st.plotly_chart(fig10)
+
+
+def plot_RaceShape(df):
+    df["Avg Pace"].replace("--", pd.NA, inplace=True)
+    df.dropna(subset=["Avg Pace"], inplace=True)
+
+    df["Date"] = pd.to_datetime(df["Date"], format='%Y-%m-%d %H:%M:%S').dt.strftime('%Y-%m-%d')
+    df["Date"] = pd.to_datetime(df["Date"], format='%Y-%m-%d')
+
+    # Remove rows with invalid dates
+    df = df.dropna(subset=["Date"])
+
+    
+
+    # Convert Total Ascent and Total Descent to integers
+    df["Total Ascent"] = df["Total Ascent"].str.replace("--", "0").astype(int)
+    df["Total Descent"] = df["Total Descent"].str.replace("--", "0").astype(int)
+
+    # Calculate Speed
+    df["Speed"] = 60 / df["Avg Pace (Minutes)"]
+
+    # Calculate Hill Correction
+    df["uphillEquation"] = df["Total Ascent"] * 2
+    df["downhillEquation"] = df["Total Descent"] * 1
+    df["Hill Correction"] = df["uphillEquation"] - df["downhillEquation"]
+
+    # Calculate Race Shape
+    df["Race Shape"] = (df["Speed"] / df["Avg HR"] * 1000) + (abs(df["Min Temp"] - df["Max Temp"]) * 0.01) + (df["Hill Correction"] * 0.001) + (df["Distance"] * 0.17)
+
+    # Group by month and calculate mean Race Shape
+    monthly_race_shape = df.groupby(df["Date"].dt.to_period("M"))["Race Shape"].mean().reset_index()
+
+    # Plot
+    fig11 = px.bar(monthly_race_shape, x="Date", y="Race Shape", title="Average Race Shape by Month", labels={'Date':'Date', 'Race Shape':'Average Race Shape'}, color_discrete_sequence=['light blue'])
+    st.plotly_chart(fig11)
+
     
 def main():
     st.title('Garmin CSV Reader and Graph Plotter')
@@ -217,6 +265,7 @@ def main():
             plot_APM_JustMarathons(df)
             plot_APM_NoRaces(df)
             plot_APM_JustRaces(df)
+            plot_RaceShape(df)
         except Exception as e:
             st.error(f'Error: {e}')
 
