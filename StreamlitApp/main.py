@@ -206,11 +206,13 @@ def main():
             # turning them to types I need
             df['Time'] = pd.to_timedelta(df['Time'], errors='coerce').dt.total_seconds() / 3600  # Convert time to hours
             df['Avg HR'] = pd.to_numeric(df['Avg HR'], errors='coerce')
+            df['Total Ascent'] = pd.to_numeric(df['Avg HR'], errors='coerce')
+            df['Total Descent'] = pd.to_numeric(df['Avg HR'], errors='coerce')
 
 
             # KPI Metrics
             st.header("Running Metrics Overview")
-            kpi1, kpi2, kpi3 = st.columns(3)
+            kpi1, kpi2, kpi3, kpi4, kpi5 = st.columns(5)
 
             with kpi1:
                 st.metric(label="Total Distance (Miles)", value="{:,.0f}".format(df['Distance'].sum()))
@@ -218,6 +220,10 @@ def main():
                 st.metric(label="Total Time (Hours)", value="{:,.0f}".format(df['Time'].sum()))
             with kpi3:
                 st.metric(label="Total Average Heart Rate", value="{:,.0f}".format(df['Avg HR'].mean()))
+            with kpi4:
+                st.metric(label="Total Ascent", value="{:,.0f}".format(df['Total Ascent'].sum()))
+            with kpi5:
+                st.metric(label="Total Descent", value="{:,.0f}".format(df['Total Descent'].sum()))
 
             st.header('Graphs:')
 
