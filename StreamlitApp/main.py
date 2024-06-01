@@ -215,6 +215,10 @@ def main():
             pattern = '|'.join(words_to_search)  
             combined_word_count = df['Title'].str.contains(pattern, case=False, regex=True).sum()
 
+            # calculating the marathons correctly
+            df_filtered_marathons = df[df['Title'].str.contains('Marathon', case=False) & ~df['Title'].str.contains('Half', case=False)]
+            frequency_count_marathons = df_filtered_marathons.shape[0]
+
             # calculating the half marathons correctly
             words_to_search_half = ['Forest Half', 'Half Marathon']
             pattern_half = '|'.join(words_to_search_half)  
@@ -245,7 +249,7 @@ def main():
             with kpi6:
                 st.metric(label="Total Races", value="{:,.0f}".format(combined_word_count))
             with kpi7:
-                st.metric(label="Total Marathons", value="{:,.0f}".format(df['Title'].str.contains('Marathon', case=False).sum()))
+                st.metric(label="Total Full Marathons", value="{:,.0f}".format(frequency_count_marathons))
             with kpi8:
                 st.metric(label="Total Half Marathons", value="{:,.0f}".format(combined_word_count_half))
             with kpi9:
