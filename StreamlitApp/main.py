@@ -220,6 +220,11 @@ def main():
             pattern_half = '|'.join(words_to_search_half)  
             combined_word_count_half = df['Title'].str.contains(pattern_half, case=False, regex=True).sum()
 
+            # calculating the 100's correctly
+            min_value = 100
+            max_value = 110
+            df_filtered_100 = df[(df['Distance'] >= min_value) & (df['Distance'] <= max_value)]
+            frequency_count_100 = df_filtered_100.shape[0]
 
             # KPI Metrics
             st.header("Running Metrics Overview")
@@ -248,7 +253,7 @@ def main():
             with kpi10:
                 st.metric(label="Total 10k's", value="{:,.0f}".format(df['Title'].str.contains('10k', case=False).sum()))
             with kpi11:
-                st.metric(label="Total 100's", value="{:,.0f}".format(df['Title'].str.contains('100', case=False).sum()))
+                st.metric(label="Total 100's", value="{:,.0f}".format(frequency_count_100))
             with kpi12:
                 st.metric(label="Total Jim's", value="{:,.0f}".format(df['Title'].str.contains('Jim', case=False).sum()))
 
