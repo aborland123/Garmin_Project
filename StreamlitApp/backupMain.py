@@ -201,7 +201,11 @@ def main():
             df = pd.read_csv(uploaded_file)
             st.success('File successfully uploaded and read.')
             df = df.iloc[0:]         
-            df = df.dropna()
+            columns_to_check = ['Time', 'Avg HR', 'Total Ascent', 'Total Descent', 'Distance', 'Title', 'Date', 'Avg Pace']
+
+            # Drop rows with NaNs in the specified columns
+            df = df.dropna(subset=columns_to_check)
+            #df = df.dropna()
 
             # turning them to types I need
             df['Time'] = pd.to_timedelta(df['Time'], errors='coerce').dt.total_seconds() / 3600  # Convert time to hours
