@@ -197,15 +197,11 @@ def main():
     if uploaded_file is not None:
         # Read CSV file
         try:
-            #df = pd.read_csv(uploaded_file, skiprows=1)
             df = pd.read_csv(uploaded_file)
             st.success('File successfully uploaded and read.')
             df = df.iloc[0:]         
             columns_to_check = ['Time', 'Avg HR', 'Total Ascent', 'Total Descent', 'Distance', 'Title', 'Date', 'Avg Pace']
-
-            # Drop rows with NaNs in the specified columns
             df = df.dropna(subset=columns_to_check)
-            #df = df.dropna()
 
             # turning them to types I need
             df['Time'] = pd.to_timedelta(df['Time'], errors='coerce').dt.total_seconds() / 3600  # Convert time to hours
@@ -223,6 +219,7 @@ def main():
             st.header("Running Metrics Overview")
             kpi1, kpi2, kpi3, kpi4, kpi5 = st.columns(5)
             kpi6, kpi7, kpi8, kpi9, kpi10 = st.columns(5)
+            kpi11, kpi12 = st.columns(5)
 
             with kpi1:
                 st.metric(label="Total Distance (Miles)", value="{:,.0f}".format(df['Distance'].sum()))
@@ -241,9 +238,13 @@ def main():
             with kpi8:
                 st.metric(label="Total Half Marathons", value="{:,.0f}".format(df['Title'].str.contains('Half', case=False).sum()))
             with kpi9:
-                st.metric(label="Total 10k's", value="{:,.0f}".format(df['Title'].str.contains('10k', case=False).sum()))
-            with kpi10:
                 st.metric(label="Total 5k's", value="{:,.0f}".format(df['Title'].str.contains('5k', case=False).sum()))
+            with kpi10:
+                st.metric(label="Total 10k's", value="{:,.0f}".format(df['Title'].str.contains('10k', case=False).sum()))
+            with kpi11:
+                st.metric(label="Total 100's", value="{:,.0f}".format(df['Title'].str.contains('100', case=False).sum()))
+            with kpi12:
+                st.metric(label="Total Jim's", value="{:,.0f}".format(df['Title'].str.contains('Jim', case=False).sum()))
 
             st.header('Graphs:')
 
