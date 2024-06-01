@@ -206,8 +206,8 @@ def main():
             # turning them to types I need
             df['Time'] = pd.to_timedelta(df['Time'], errors='coerce').dt.total_seconds() / 3600  # Convert time to hours
             df['Avg HR'] = pd.to_numeric(df['Avg HR'], errors='coerce')
-            df['Total Ascent'] = pd.to_numeric(df['Avg HR'], errors='coerce')
-            df['Total Descent'] = pd.to_numeric(df['Avg HR'], errors='coerce')
+            df['Total Ascent'] = pd.to_numeric(df['Total Ascent'], errors='coerce')
+            df['Total Descent'] = pd.to_numeric(df['Total Descent'], errors='coerce')
 
 
             # KPI Metrics
