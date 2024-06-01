@@ -219,7 +219,7 @@ def main():
             st.header("Running Metrics Overview")
             kpi1, kpi2, kpi3, kpi4, kpi5 = st.columns(5)
             kpi6, kpi7, kpi8, kpi9, kpi10 = st.columns(5)
-            kpi11, kpi12 = st.columns(5)
+            kpi11, kpi12 = st.columns(2)
 
             with kpi1:
                 st.metric(label="Total Distance (Miles)", value="{:,.0f}".format(df['Distance'].sum()))
