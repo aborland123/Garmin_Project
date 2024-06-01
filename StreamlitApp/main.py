@@ -222,7 +222,13 @@ def main():
             # calculating the half marathons correctly
             words_to_search_half = ['Forest Half', 'Half Marathon']
             pattern_half = '|'.join(words_to_search_half)  
-            combined_word_count_half = df['Title'].str.contains(pattern_half, case=False, regex=True).sum()
+            combined_word_count_half = df['Title'].str.contains(pattern_half, case=False, regex=True).sum() 
+
+            #calculating the 5k correctly
+            words_to_search_5k = ['15K', '15']
+            pattern_5k = '|'.join(words_to_search_5k) 
+            combined_word_count_5k = df[df['Title'].str.contains(' 5k', case=False, regex=True) & ~df['Title'].str.contains(pattern_5k, case=False)]
+            frequency_count_5k = combined_word_count_5k.shape[0]
 
             # calculating the 100's correctly
             min_value = 100
@@ -253,7 +259,7 @@ def main():
             with kpi8:
                 st.metric(label="Total Half Marathons", value="{:,.0f}".format(combined_word_count_half))
             with kpi9:
-                st.metric(label="Total 5k's", value="{:,.0f}".format(df['Title'].str.contains(' 5k', case=False).sum()))
+                st.metric(label="Total 5k's", value="{:,.0f}".format(frequency_count_5k))
             with kpi10:
                 st.metric(label="Total 10k's", value="{:,.0f}".format(df['Title'].str.contains('10k', case=False).sum()))
             with kpi11:
