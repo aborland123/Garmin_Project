@@ -20,7 +20,7 @@ def plot_ADM_JustRaces(df):
     df["Distance"] = pd.to_numeric(df["Distance"], errors='coerce')
     df["Date"] = pd.to_datetime(df["Date"], format='%Y-%m-%d')
 
-    keywords_to_remove = ['Marathon', '5k', 'Race', 'Jim', 'Half']
+    keywords_to_remove = ['Marathon', 'Half', '5k', '10k', '100', 'Jim']
 
     mask = ~df['Title'].str.contains('|'.join(keywords_to_remove), case=False)
     df = df[mask]
@@ -35,7 +35,7 @@ def plot_ADM_NoRaces(df):
     df["Distance"] = pd.to_numeric(df["Distance"], errors='coerce')
     df["Date"] = pd.to_datetime(df["Date"], format='%Y-%m-%d')
 
-    keywords_to_remove = ['Marathon', '5k', 'Race', 'Jim', 'Half']
+    keywords_to_remove = ['Marathon', 'Half', '5k', '10k', '100', 'Jim']
 
     #removes these values
     mask = df['Title'].str.contains('|'.join(keywords_to_remove), case=False)
@@ -97,7 +97,7 @@ def plot_APMD_JustRaces(df):
     df["Date"] = pd.to_datetime(df["Date"], format='%Y-%m-%d %H:%M:%S').dt.strftime('%Y-%m-%d')
     df["Date"] = pd.to_datetime(df["Date"], format='%Y-%m-%d')
 
-    keywords_to_include = ['Marathon', '5k', 'Race', 'Jim', 'Half']
+    keywords_to_include = ['Marathon', 'Half', '5k', '10k', '100', 'Jim']
 
     mask = df['Title'].str.contains('|'.join(keywords_to_include), case=False)
     df = df[mask]
@@ -145,7 +145,7 @@ def plot_APM_NoRaces(df):
     df["Avg Pace"].replace("--", pd.NA, inplace=True)
     df.dropna(subset=["Avg Pace"], inplace=True)
 
-    keywords_to_remove = ['Marathon', '5k', 'Race', 'Jim', 'Half']
+    keywords_to_remove = ['Marathon', 'Half', '5k', '10k', '100', 'Jim']
 
     mask = ~df['Title'].str.contains('|'.join(keywords_to_remove), case=False)
     df = df[mask]
@@ -170,7 +170,7 @@ def plot_APM_JustRaces(df):
     df["Avg Pace"].replace("--", pd.NA, inplace=True)
     df.dropna(subset=["Avg Pace"], inplace=True)
 
-    keywords_to_include = ['Marathon', '5k', 'Race', 'Jim', 'Half']
+    keywords_to_include = ['Marathon', 'Half', '5k', '10k', '100', 'Jim']
 
     mask = df['Title'].str.contains('|'.join(keywords_to_include), case=False)
     df = df[mask]
@@ -186,39 +186,6 @@ def plot_APM_JustRaces(df):
     st.plotly_chart(fig10)
 
 
-def plot_RaceShape(df):
-    df["Avg Pace"].replace("--", pd.NA, inplace=True)
-    df.dropna(subset=["Avg Pace"], inplace=True)
-
-    df["Date"] = pd.to_datetime(df["Date"], format='%Y-%m-%d %H:%M:%S').dt.strftime('%Y-%m-%d')
-    df["Date"] = pd.to_datetime(df["Date"], format='%Y-%m-%d')
-
-    # Remove rows with invalid dates
-    df = df.dropna(subset=["Date"])
-
-    
-
-    # Convert Total Ascent and Total Descent to integers
-    df["Total Ascent"] = df["Total Ascent"].str.replace("--", "0").astype(int)
-    df["Total Descent"] = df["Total Descent"].str.replace("--", "0").astype(int)
-
-    # Calculate Speed
-    df["Speed"] = 60 / df["Avg Pace (Minutes)"]
-
-    # Calculate Hill Correction
-    df["uphillEquation"] = df["Total Ascent"] * 2
-    df["downhillEquation"] = df["Total Descent"] * 1
-    df["Hill Correction"] = df["uphillEquation"] - df["downhillEquation"]
-
-    # Calculate Race Shape
-    df["Race Shape"] = (df["Speed"] / df["Avg HR"] * 1000) + (abs(df["Min Temp"] - df["Max Temp"]) * 0.01) + (df["Hill Correction"] * 0.001) + (df["Distance"] * 0.17)
-
-    # Group by month and calculate mean Race Shape
-    monthly_race_shape = df.groupby(df["Date"].dt.to_period("M"))["Race Shape"].mean().reset_index()
-
-    # Plot
-    fig11 = px.bar(monthly_race_shape, x="Date", y="Race Shape", title="Average Race Shape by Month", labels={'Date':'Date', 'Race Shape':'Average Race Shape'}, color_discrete_sequence=['light blue'])
-    st.plotly_chart(fig11)
 
     
 def main():
@@ -239,11 +206,19 @@ def main():
             # turning them to types I need
             df['Time'] = pd.to_timedelta(df['Time'], errors='coerce').dt.total_seconds() / 3600  # Convert time to hours
             df['Avg HR'] = pd.to_numeric(df['Avg HR'], errors='coerce')
+            df['Total Ascent'] = pd.to_numeric(df['Total Ascent'], errors='coerce')
+            df['Total Descent'] = pd.to_numeric(df['Total Descent'], errors='coerce')
+
+
+            words_to_search = ['Marathon', 'Half', '5k', '10k', '100', 'Jim']
+            pattern = '|'.join(words_to_search)  
+            combined_word_count = df['Title'].str.contains(pattern, case=False, regex=True).sum()
 
 
             # KPI Metrics
             st.header("Running Metrics Overview")
-            kpi1, kpi2, kpi3 = st.columns(3)
+            kpi1, kpi2, kpi3, kpi4, kpi5 = st.columns(5)
+            kpi6, kpi7, kpi8, kpi9, kpi10 = st.columns(5)
 
             with kpi1:
                 st.metric(label="Total Distance (Miles)", value="{:,.0f}".format(df['Distance'].sum()))
@@ -251,6 +226,20 @@ def main():
                 st.metric(label="Total Time (Hours)", value="{:,.0f}".format(df['Time'].sum()))
             with kpi3:
                 st.metric(label="Total Average Heart Rate", value="{:,.0f}".format(df['Avg HR'].mean()))
+            with kpi4:
+                st.metric(label="Total Ascent", value="{:,.0f}".format(df['Total Ascent'].sum()))
+            with kpi5:
+                st.metric(label="Total Descent", value="{:,.0f}".format(df['Total Descent'].sum()))
+            with kpi6:
+                st.metric(label="Total Races", value="{:,.0f}".format(combined_word_count))
+            with kpi7:
+                st.metric(label="Total Marathons", value="{:,.0f}".format(df['Title'].str.contains('Marathon', case=False).sum()))
+            with kpi8:
+                st.metric(label="Total Half Marathons", value="{:,.0f}".format(df['Title'].str.contains('Half', case=False).sum()))
+            with kpi9:
+                st.metric(label="Total 10k's", value="{:,.0f}".format(df['Title'].str.contains('10k', case=False).sum()))
+            with kpi10:
+                st.metric(label="Total 5k's", value="{:,.0f}".format(df['Title'].str.contains('5k', case=False).sum()))
 
             st.header('Graphs:')
 
@@ -265,7 +254,6 @@ def main():
             plot_APM_JustMarathons(df)
             plot_APM_NoRaces(df)
             plot_APM_JustRaces(df)
-            plot_RaceShape(df)
         except Exception as e:
             st.error(f'Error: {e}')
 

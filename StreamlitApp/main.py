@@ -20,7 +20,7 @@ def plot_ADM_JustRaces(df):
     df["Distance"] = pd.to_numeric(df["Distance"], errors='coerce')
     df["Date"] = pd.to_datetime(df["Date"], format='%Y-%m-%d')
 
-    keywords_to_remove = ['Marathon', '5k', 'Race', 'Jim', 'Half']
+    keywords_to_remove = ['Marathon', 'Half', '5k', '10k', '100', 'Jim']
 
     mask = ~df['Title'].str.contains('|'.join(keywords_to_remove), case=False)
     df = df[mask]
@@ -35,7 +35,7 @@ def plot_ADM_NoRaces(df):
     df["Distance"] = pd.to_numeric(df["Distance"], errors='coerce')
     df["Date"] = pd.to_datetime(df["Date"], format='%Y-%m-%d')
 
-    keywords_to_remove = ['Marathon', '5k', 'Race', 'Jim', 'Half']
+    keywords_to_remove = ['Marathon', 'Half', '5k', '10k', '100', 'Jim']
 
     #removes these values
     mask = df['Title'].str.contains('|'.join(keywords_to_remove), case=False)
@@ -97,7 +97,7 @@ def plot_APMD_JustRaces(df):
     df["Date"] = pd.to_datetime(df["Date"], format='%Y-%m-%d %H:%M:%S').dt.strftime('%Y-%m-%d')
     df["Date"] = pd.to_datetime(df["Date"], format='%Y-%m-%d')
 
-    keywords_to_include = ['Marathon', '5k', 'Race', 'Jim', 'Half']
+    keywords_to_include = ['Marathon', 'Half', '5k', '10k', '100', 'Jim']
 
     mask = df['Title'].str.contains('|'.join(keywords_to_include), case=False)
     df = df[mask]
@@ -145,7 +145,7 @@ def plot_APM_NoRaces(df):
     df["Avg Pace"].replace("--", pd.NA, inplace=True)
     df.dropna(subset=["Avg Pace"], inplace=True)
 
-    keywords_to_remove = ['Marathon', '5k', 'Race', 'Jim', 'Half']
+    keywords_to_remove = ['Marathon', 'Half', '5k', '10k', '100', 'Jim']
 
     mask = ~df['Title'].str.contains('|'.join(keywords_to_remove), case=False)
     df = df[mask]
@@ -170,7 +170,7 @@ def plot_APM_JustRaces(df):
     df["Avg Pace"].replace("--", pd.NA, inplace=True)
     df.dropna(subset=["Avg Pace"], inplace=True)
 
-    keywords_to_include = ['Marathon', '5k', 'Race', 'Jim', 'Half']
+    keywords_to_include = ['Marathon', 'Half', '5k', '10k', '100', 'Jim']
 
     mask = df['Title'].str.contains('|'.join(keywords_to_include), case=False)
     df = df[mask]
@@ -210,9 +210,15 @@ def main():
             df['Total Descent'] = pd.to_numeric(df['Total Descent'], errors='coerce')
 
 
+            words_to_search = ['Marathon', 'Half', '5k', '10k', '100', 'Jim']
+            pattern = '|'.join(words_to_search)  
+            combined_word_count = df['Title'].str.contains(pattern, case=False, regex=True).sum()
+
+
             # KPI Metrics
             st.header("Running Metrics Overview")
             kpi1, kpi2, kpi3, kpi4, kpi5 = st.columns(5)
+            kpi6, kpi7, kpi8, kpi9, kpi10 = st.columns(5)
 
             with kpi1:
                 st.metric(label="Total Distance (Miles)", value="{:,.0f}".format(df['Distance'].sum()))
@@ -224,6 +230,16 @@ def main():
                 st.metric(label="Total Ascent", value="{:,.0f}".format(df['Total Ascent'].sum()))
             with kpi5:
                 st.metric(label="Total Descent", value="{:,.0f}".format(df['Total Descent'].sum()))
+            with kpi6:
+                st.metric(label="Total Races", value="{:,.0f}".format(combined_word_count))
+            with kpi7:
+                st.metric(label="Total Marathons", value="{:,.0f}".format(df['Title'].str.contains('Marathon', case=False).sum()))
+            with kpi8:
+                st.metric(label="Total Half Marathons", value="{:,.0f}".format(df['Title'].str.contains('Half', case=False).sum()))
+            with kpi9:
+                st.metric(label="Total 10k's", value="{:,.0f}".format(df['Title'].str.contains('10k', case=False).sum()))
+            with kpi10:
+                st.metric(label="Total 5k's", value="{:,.0f}".format(df['Title'].str.contains('5k', case=False).sum()))
 
             st.header('Graphs:')
 
