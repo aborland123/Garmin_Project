@@ -1,7 +1,9 @@
 # Calculating NGCC all other HXs CO2 Removal BEC Breakdown
 aspen_model_results_E19 = 3927398
 ngcc_process_D31 = ## flue gas user input
-ngcc_process_E31 = 3889650 # ask about this
+
+ngcc_process_E31 = 3889650 # ask about this 
+
 ngcc_process_E29 = 3927398
 aspen_model_results_E22 = 1.126
 aspen_model_results_E21 = 3889650
@@ -10,7 +12,9 @@ absorber_sizing_D15 = ngcc_process_D31
 absorber_sizing_D19 = 0.3
 absorber_sizing_D16 = absorber_sizing_D15 * 2.20462 / 3600
 absorber_sizing_D22 = absorber_sizing_D16 / absorber_sizing_D19
-absorber_sizing_D23 = math.sqrt(absorber_sizing_D22 / math.pi) ** 2
+
+absorber_sizing_D23 = math.sqrt(absorber_sizing_D22 / math.pi) * 2 # FOUND PROBLEM
+
 absorber_sizing_D24 = absorber_sizing_D23 * 0.3048
 absorber_sizing_D25 = IF ( absorber_sizing_D24 < 30.48, 1, 2)
 absorber_sizing_D10 = absorber_sizing_D25
@@ -38,16 +42,18 @@ worley_uky_D69 = 450
 worley_uky_D68 = ((104 - 60) - (107.8 - 80)) / LN((104 - 60) / (107.8 - 80))
 hx_D64 = aspen_model_results_E79 * (ngcc_process_D33 / aspen_model_results_E23)
 hx_D101 = hx_D100 / worley_uky_D101 / worley_uky_D102 * 1000000
-hx_102 = roundup(hx_D101 / 12000, 0)
+hx_D102 = roundup(hx_D101 / 12000, 0)
 hx_D90 = roundup(hx_D77 / 17000, 0)
-hx_D89 = hx_D89 / worley_uky_D91 / worley_uky_D94 * 1000000
+
+hx_D89 = hx_D88 / worley_uky_D91 / worley_uky_D94 * 1000000 # ALSO A PROBLEM
+
 hx_D78 = roundup(hx_D77 / 5000, 0)
 hx_D77 = hx_D76 / worley_uky_D83 / worley_uky_D86 * 1000000
 column_D31 = absorber_sizing_D10
 hx_D66 = column_D31
 hx_D65 = hx_D64 / worley_uky_D68 / worley_uky_D69 * 1000000
 worley_uky_D76 = 11179
-hx_D103 = hx_D101 / hx_102
+hx_D103 = hx_D101 / hx_D102
 hx_D100 = aspen_model_results_E88 * (ngcc_process_D33 / aspen_model_results_E23)
 hx_D76 = aspen_model_results_E82 * (ngcc_process_D33 / aspen_model_results_E23)
 hx_D91 = hx_D89 / hx_D90
@@ -71,7 +77,9 @@ hx_D105 = hx_D104 * worley_uky_D78 / worley_uky_D77
 hx_D102 = roundup(hx_D101 / 12000, 0)
 hx_D90 = roundup(hx_D77 / 17000, 0)
 hx_D93 = hx_D92 * worley_uky_D78 / worley_uky_D77
-hx_D78 = hx_D77 / hx_D78
+
+hx_D78 = math.round(hx_D77 / 5000)    # CHANGED THIS!!!
+
 hx_D81 = hx_D80 * worley_uky_D78 / worley_uky_D77
 hx_D66 = column_D31
 hx_D69 = hx_D68 * worley_uky_D73 / worley_uky_D72
@@ -104,63 +112,48 @@ st.write("goal is: 3,652 for norm, 2 for 400)")
 
 
 
-
-# Calculating NGCC Lean Pump CO2 Removal BEC Breakdown
-pump_and_blower_D41 = 0.83
-pump_and_blower_D34 = 2
-pump_and_blower_D38 = 8.78120532592598
-worley_uky_D127 = 68.5
-worley_uky_D241 = 9.8
-worley_uky_D125 = 88
-worley_uky_D242 = 0.3048
-worley_uky_D243 = 0.000145038
-worley_uky_D126 = 1095 * worley_uky_D241 * (worley_uky_D125) * worley_uky_D242 * worley_uky_D243
-ngcc_process_D31 = ## flue gas user input
-ngcc_process_D32 = l_g_user_input ## user input
-ngcc_process_D33 = ngcc_process_D31 * ngcc_process_D32
-absorber_sizing_D17 = ngcc_process_D32
-absorber_sizing_D20 = 130.95 * absorber_sizing_D17 - 82.133
-absorber_sizing_D31 = 10
-absorber_sizing_D32 = round(absorber_sizing_D20 / 12, 0)
-absorber_sizing_D33 = absorber_sizing_D20 + absorber_sizing_D31 + absorber_sizing_D32 * 10 + 25
-absorber_sizing_D9 = absorber_sizing_D33
-worley_uky_D128 = worley_uky_D127 - worley_uky_D126
-pump_and_blower_D39 = ngcc_process_D33 / 60 * 2.2 / pump_and_blower_D38
-pump_and_blower_D37 = 1095 * 9.8 * (absorber_sizing_D9 - 20) * 0.3048 * 0.000145038 + worley_uky_D128
-pump_and_blower_D40 = pump_and_blower_D39 / pump_and_blower_D34
-worley_uky_D118 = 46.4
-worley_uky_D119 = 22676
-pump_and_blower_C11 = 0.72
-pump_and_blower_D42 = pump_and_blower_D40 * pump_and_blower_D37 / 1714 / pump_and_blower_D41
-worley_uky_D120 =worley_uky_D118 * worley_uky_D119 / 1714
-worley_uky_D123 = 2191808.24
-worley_uky_D122 = 3181081.04
-worley_uky_D121 = 1038544
-pump_and_blower_D43 = (pump_and_blower_D42 / worley_uky_D120) ** pump_and_blower_C11 * worley_uky_D121
-ngcc_process_D36 = cepci_baseline  ## user input
-pump_and_blower_D44 = pump_and_blower_D43 * worley_uky_D122 / worley_uky_D121
-pump_and_blower_D45 = pump_and_blower_D43 * worley_uky_D123 / worley_uky_D121
-pump_and_blower_C10 = ngcc_process_D36
-pump_and_blower_C12 = 588.9
-pump_and_blower_D46 = pump_and_blower_D44 * pump_and_blower_D34 + pump_and_blower_D45
-pump_and_blower_D47 = pump_and_blower_D46 * pump_and_blower_C10 / pump_and_blower_C12
-pump_and_blower_D17 = pump_and_blower_D47
-ngcc_capital_N34 = pump_and_blower_D17
-ngcc_result_summmary_lean_pump = ngcc_capital_N34 / 1000
-
-
-# Display output in Streamlit
-st.write(int(round(ngcc_result_summmary_lean_pump, 0)))
-st.write("goal is: 8,513 for norm, 11 for 400)")
-
-
-
-
-
+# FINISHEDDDDDDD
 # Calculating NGCC Rich Pump CO2 Removal BEC Breakdown
 
-
-
+ngcc_process_D32 = # L_G user input
+ngcc_process_D31 = # flow gas flow rate user input
+ngcc_process_H22 = 0.90
+ngcc_process_D33 = ngcc_process_D31 * ngcc_process_D32
+ngcc_process_D22 = ngcc_process_H22
+ngcc_process_D17 = 0.0639 # percentage
+pump_and_blower_D51 = 2
+pump_and_blower_D55 = 9
+pump_and_blower_D56 = (ngcc_process_D31 * ngcc_process_D17 * (1 - ngcc_process_D22) + ngcc_process_D33) / 60 * 2.2 / pump_and_blower_D55
+stripper_sizing_D19 = 1069
+ngcc_process_D16 = 0.0414 # percentage
+stripper_sizing_D16 = ngcc_process_D33 + ngcc_process_D31 * ngcc_process_D16 * ngcc_process_D22
+stripper_sizing_D17 = stripper_sizing_D16 / 3600
+ngcc_process_D31 = 3.6
+stripper_sizing_D20 = (stripper_sizing_D17 * 1000 * 60) / (stripper_sizing_D19)
+stripper_sizing_D23 = 12
+stripper_sizing_D16 = ngcc_process_D33 + ngcc_process_D31 * ngcc_process_D16 * ngcc_process_D22
+stripper_sizing_D29 = 2 * stripper_sizing_D23 * stripper_sizing_D20
+stripper_sizing_D31 = 3.6
+stripper_sizing_D18 = stripper_sizing_D16 * 2.20462 / 3600
+stripper_sizing_D35 = stripper_sizing_D18 / stripper_sizing_D31
+stripper_sizing_D30 = stripper_sizing_D29 * 0.001 * 35.3147
+stripper_sizing_D34 = stripper_sizing_D30 / stripper_sizing_D35
+stripper_sizing_D9 = stripper_sizing_D34
+pump_and_blower_D58 = 0.83
+pump_and_blower_D57 = pump_and_blower_D56 / pump_and_blower_D51
+pump_and_blower_D54 = 1095 * 9.8 * (stripper_sizing_D9) * 0.3048 * 0.000145038
+worley_uky_D132 = 22442
+worley_uky_D131 = 99
+pump_and_blower_D59 = pump_and_blower_D57 * pump_and_blower_D54 / 1714 / pump_and_blower_D58
+pump_and_blower_C11 = 0.7
+worley_uky_D134 = 625768
+worley_uky_D136 = 1164774.08
+worley_uky_D135 = 1600982.72
+worley_uky_D133 = worley_uky_D131 * worley_uky_D132 / 1714
+pump_and_blower_D60 = (pump_and_blower_D59 / worley_uky_D133) ** pump_and_blower_C11 * worley_uky_D134
+pump_and_blower_D62 = pump_and_blower_D60 * worley_uky_D136 / worley_uky_D134 
+pump_and_blower_D51 = 2
+pump_and_blower_D61 = pump_and_blower_D60 * worley_uky_D135 / worley_uky_D134
 pump_and_blower_C12 = 588.9
 pump_and_blower_C10 = ngcc_process_D36
 pump_and_blower_D63 = pump_and_blower_D61 * pump_and_blower_D51 + pump_and_blower_D62
@@ -175,107 +168,6 @@ st.write(int(round(ngcc_result_summmary_rich_pump, 0)))
 st.write("goal is: 2,777 for norm, 4 for 400)")
 
 
-
-# Calculating NGCC Intercooling Pump, mid CO2 Removal BEC Breakdown
-pump_and_blower_C12 = 588.9
-pump_and_blower_D73 = 0.83
-pump_and_blower_D70 = 8.99113616258246
-pump_and_blower_D68 = 2
-worley_uky_D144 = 34.1
-worley_uky_D145 = 20335
-ngcc_process_D31 = ## flue gas user input
-ngcc_process_D32 = l_g_user_input ## user input
-ngcc_process_D33 = ngcc_process_D31 * ngcc_process_D32
-ngcc_process_D36 = cepci_baseline  ## user input
-worley_uky_D146 = worley_uky_D144 * worley_uky_D145 / 1714
-pump_and_blower_D71 = ngcc_process_D33 / 60 * 2.2 / pump_and_blower_D70
-pump_and_blower_D69 = worley_uky_D144
-pump_and_blower_D72 = pump_and_blower_D71 / pump_and_blower_D68
-pump_and_blower_D74 = pump_and_blower_D72 * pump_and_blower_D69 / 1714 / pump_and_blower_D73
-pump_and_blower_C11 = 0.72
-worley_uky_D148 = 2589463.68
-worley_uky_D147 = 523536
-worley_uky_D149 = 1636942.88
-pump_and_blower_D75 = (pump_and_blower_D74 / worley_uky_D146) ** pump_and_blower_C11 * worley_uky_D147
-pump_and_blower_C10 = ngcc_process_D36
-pump_and_blower_D76 = pump_and_blower_D75 * worley_uky_D148 / worley_uky_D147
-pump_and_blower_D68 = 2
-pump_and_blower_D77 = pump_and_blower_D75 * worley_uky_D149 / worley_uky_D147
-pump_and_blower_D78 = pump_and_blower_D76 * pump_and_blower_D68 + pump_and_blower_D77
-pump_and_blower_D79 = pump_and_blower_D78 * pump_and_blower_C10 / pump_and_blower_C12
-pump_and_blower_D19 = pump_and_blower_D79
-ngcc_capital_N36 = pump_and_blower_D19
-ngcc_result_summmary_intercooling_pump_mid = ngcc_capital_N36 / 1000
-
-
-# Display output in Streamlit
-st.write(int(round(ngcc_result_summmary_intercooling_pump_mid, 0)))
-st.write("goal is: 4,519 for norm, 6 for 400)")
-
-
-
-# Calculating NGCC Other Pumps CO2 Removal BEC Breakdown
-pump_and_blower_C12 = 588.9
-pump_and_blower_C11 = 0.72
-ngcc_process_E31 = 3889650
-ngcc_process_E30 = 2531705
-ngcc_process_D31 = ## flue gas user input
-ngcc_process_D32 = l_g_user_input ## user input
-ngcc_process_D33 = ngcc_process_D31 * ngcc_process_D32
-pump_and_blower_D84 = ngcc_process_D33
-pump_and_blower_D95 = 0.03 # 3%
-worley_uky_D11 = 10532649.5845321
-pump_and_blower_D38 = 8.78120532592598
-pump_and_blower_D39 = ngcc_process_D33 / 60 * 2.2 / pump_and_blower_D38
-worley_uky_D152 = worley_uky_D11
-worley_uky_D153 = 7
-pump_and_blower_D85 = pump_and_blower_D84 * worley_uky_D153 / worley_uky_D152
-worley_uky_D162 = 1434.08154304461
-pump_and_blower_D96 = pump_and_blower_D95 * pump_and_blower_D39
-worley_uky_D154 = 76648
-worley_uky_D156 = 137453.796
-pump_and_blower_D86 = (pump_and_blower_D85 / worley_uky_D153) ** pump_and_blower_C11 * worley_uky_D154
-worley_uky_D155 = 219163.2012
-worley_uky_D163 = 74568
-worley_uky_D165 = 120291.2408
-pump_and_blower_D97 = (pump_and_blower_D96 / worley_uky_D162) ** pump_and_blower_C11 * worley_uky_D163
-worley_uky_D164 = 176857.744
-pump_and_blower_D88 = pump_and_blower_D86 * worley_uky_D156 / worley_uky_D154
-pump_and_blower_D83 = 2
-pump_and_blower_D87 = pump_and_blower_D86 * worley_uky_D155 / worley_uky_D154
-pump_and_blower_D99 = pump_and_blower_D97 * worley_uky_D165 / worley_uky_D163
-pump_and_blower_D94 = 2
-pump_and_blower_D98 = pump_and_blower_D97 * worley_uky_D164 / worley_uky_D163
-ngcc_process_D36 = cepci_baseline  ## user input
-pump_and_blower_C10 = ngcc_process_D36
-worley_uky_D9 = 1393316.12138698
-ngcc_process_D30 = ngcc_process_D31 * ngcc_process_E30 / ngcc_process_E31
-worley_uky_D171 = 1600404.6784
-worley_uky_D152 = worley_uky_D11
-pump_and_blower_D84 = ngcc_process_D33
-worley_uky_D181 = 900444.1784
-pump_and_blower_D89 = pump_and_blower_D87 * pump_and_blower_D83 + pump_and_blower_D88
-pump_and_blower_D100 = pump_and_blower_D98 * pump_and_blower_D94 + pump_and_blower_D99
-pump_and_blower_D106 = worley_uky_D171 * (ngcc_process_D30 / worley_uky_D9) ** pump_and_blower_C11
-pump_and_blower_D112 = worley_uky_D181 * (pump_and_blower_D84 / worley_uky_D152) ** pump_and_blower_C11
-pump_and_blower_D90 = pump_and_blower_D89 * pump_and_blower_C10 / pump_and_blower_C12
-pump_and_blower_D101 =pump_and_blower_D100 * pump_and_blower_C10 / pump_and_blower_C12
-pump_and_blower_D107 = pump_and_blower_D106 * pump_and_blower_C10 / pump_and_blower_C12
-pump_and_blower_D113 = pump_and_blower_D112 * pump_and_blower_C10 / pump_and_blower_C12
-pump_and_blower_D20 = pump_and_blower_D90
-pump_and_blower_D21 = pump_and_blower_D101
-pump_and_blower_D22 = pump_and_blower_D107
-pump_and_blower_D23 = pump_and_blower_D113
-ngcc_capital_N37 = pump_and_blower_D20
-ngcc_capital_N38 = pump_and_blower_D21
-ngcc_capital_N39 = pump_and_blower_D22
-ngcc_capital_N40 = pump_and_blower_D23
-ngcc_result_summmary_other_pumps = (ngcc_capital_N37 + ngcc_capital_N38 + ngcc_capital_N39 + ngcc_capital_N40) / (10 ** 3)
-
-
-# Display output in Streamlit
-st.write(int(round(ngcc_result_summmary_other_pumps, 0)))
-st.write("goal is: 3,645 for norm, 5 for 400)")
 
 
 
@@ -376,59 +268,260 @@ st.write("goal is: 19,454 for norm, 26 for 400)")
 
 
 
-# Calculating NGCC Reclaimer CO2 Removal BEC Breakdown
-worley_uky_D206 = 0.9
-worley_uky_D205 = 3027600
-ngcc_process_D31 = ## flue gas user input
-ngcc_process_D32 = l_g_user_input ## user input
+
+
+
+
+
+
+# Calculating NGCC Solvent tank CO2 Removal BEC Breakdown
+cepci_D16 = 615.9
+ngcc_process_D36 = cepci_D16
+worley_uky_D216 = 0.9
+worley_uky_D214 = 18287.79
+pump_and_blower_D38 = 8.78120532592598
+ngcc_process_D32 = # user input l_G
+ngcc_process_D31 = # user input flue gas flow rate
 ngcc_process_D33 = ngcc_process_D31 * ngcc_process_D32
-worley_uky_D11 = 10532649.58453121
-cepci_D24 = 593.6
-ngcc_process_D36 = cepci_baseline  ## user input
-other_equipment_D30 = worley_uky_D205 * (ngcc_process_D33 / worley_uky_D11) ** worley_uky_D206
-doe_baseline_inputs_E42 = 
-doe_baseline_inputs_D42 = 
-other_equipment_C12 = cepci_D24
+pump_and_blower_D39 = ngcc_process_D33 / 60 * 2.2 / pump_and_blower_D38
+worley_uky_D215 = 286100
+worley_uky_D217 = 2.84
+other_equipment_D40 = worley_uky_D215 * (pump_and_blower_D39 / worley_uky_D214) ** worley_uky_D216
+cepci_D17 = 581.8
 other_equipment_C9 = ngcc_process_D36
-other_equipment_D31 = other_equipment_D30 * doe_baseline_inputs_E42 / doe_baseline_inputs_D42
-other_equipment_D32 = other_equipment_D31 * other_equipment_C9 / other_equipment_C12
-other_equipment_D16 = other_equipment_D32
-ngcc_capital_N46 = other_equipment_D16
-ngcc_result_summmary_reclaimer = ngcc_capital_N46 / 1000
+other_equipment_D41 = other_equipment_D40 * worley_uky_D217
+other_equipment_C13 = cepci_D17
+other_equipment_D43 = 2
+other_equipment_D42 = other_equipment_D41 * other_equipment_C9 / other_equipment_C13
+other_equipment_D44 = other_equipment_D42 * other_equipment_D43
+other_equipment_D18 = other_equipment_D44
+ngcc_capital_N50 = other_equipment_D18
+ngcc_result_summmary_solvent_tank = ngcc_capital_N50 / (10 ** 3)
 
 
 # Display output in Streamlit
-st.write(int(round(ngcc_result_summmary_reclaimer, 0)))
-st.write("goal is: 1,741 for norm, 0 for 400)")
+st.write(int(round(ngcc_result_summmary_solvent_tank, 0)))
+st.write("goal is: 1,726 for norm, 0 for 400)")
 
 
 
 
-
-# Calculating NGCC CO2 Condenser Drum CO2 Removal BEC Breakdown
-## double check this one
-
-
+# Calculating NGCC Miscellaneous CO2 Removal BEC Breakdown
+ngcc_process_D32 = # user input l_G
+ngcc_process_D31 = # user input flue gas flow rate
+ngcc_process_D33 = ngcc_process_D31 * ngcc_process_D32 
+aspen_model_results_E22 = 1.126
+aspen_model_results_E21 = 3889650
+aspen_model_results_E23 = aspen_model_results_E21 * aspen_model_results_E22
+aspen_model_results_E73 = 847.8
+cepci_D16 = 615.9
+ngcc_process_D36 = cepci_D16
+worley_uky_D238 = 1.91
+worley_uky_D237 = 1
+worley_uky_D235 = 1877189
+hx_D40 = aspen_model_results_E73 * (ngcc_process_D33 / aspen_model_results_E23)
+doe_baseline_inputs_F50 = 1050.8
+doe_baseline_inputs_F49 = 571599
+doe_baseline_inputs_F51 = doe_baseline_inputs_F50 * doe_baseline_inputs_F49 / (10 ** 6) + 4.86
+ngcc_inputs_D8 = hx_D40
+ngcc_inputs_C51 = ngcc_inputs_D8 + 5
+ngcc_inputs_C49 = ngcc_inputs_C51 / doe_baseline_inputs_F51 * doe_baseline_inputs_F49
+worley_uky_D236 = 699400
+other_equipment_D63 = worley_uky_D236 * (ngcc_inputs_C49 / worley_uky_D235) ** worley_uky_D237
+cepci_D17 = 581.8
+pump_and_blower_D38 = 8.78120532592598
+worley_uky_D230 = 0.9
+worley_uky_D229 = 18287.79
+pump_and_blower_D39 = ngcc_process_D33 / 60 * 2.2 / pump_and_blower_D38
+worley_uky_D228 = 2593300
+worley_uky_D224 = 307329.284
+worley_uky_D221 = 1244231.9448 / 2
+ngcc_process_D32 = # user input l_G
+ngcc_process_D31 = # user input flue gas flow rate
+ngcc_process_D33 = ngcc_process_D31 * ngcc_process_D32
+worley_uky_D11 = 10532649.5845321
+other_equipment_C13 = cepci_D17
+other_equipment_D64 = other_equipment_D63 * worley_uky_D238
+cepci_D16 = 615.9
+cepci_D26 = 588.9
+worley_uky_D231 = 3.31
+other_equipment_D58 = worley_uky_D228 * (pump_and_blower_D39 / worley_uky_D229) ** worley_uky_D230
 doe_baseline_inputs_D42 = 224791
 doe_baseline_inputs_E42 = 273628
-cepci_D26 = 588.9
-ngcc_process_D31 = ## flue gas user input
-ngcc_process_D32 = l_g_user_input ## user input
-ngcc_process_D33 = ngcc_process_D31 * ngcc_process_D32
-ngcc_process_D36 = cepci_baseline  ## user input
-worley_uky_D209 = 2460984.0408
-worley_uky_D11 = 10532649.5845321
-worley_uky_D210 = 0.9
-other_equipment_D35 = worley_uky_D209 * (ngcc_process_D33 / worley_uky_D11) ** worley_uky_D210
-other_equipment_C11 = cepci_D26
+other_equipment_D53 = worley_uky_D224 * ngcc_process_D33 / worley_uky_D11
+other_equipment_D48 = worley_uky_D221 * ngcc_process_D33 / worley_uky_D11
 other_equipment_C9 = ngcc_process_D36
-other_equipment_D36 = other_equipment_D35 * doe_baseline_inputs_E42 / doe_baseline_inputs_D42
-other_equipment_D37 = other_equipment_D36 * other_equipment_C9 / other_equipment_C11
-other_equipment_D17 = other_equipment_D37
-ngcc_capital_N48 = other_equipment_D17
-ngcc_result_summmary_co2_condenser_drum = ngcc_capital_N48 / (10 ** 3)
+other_equipment_D66 = other_equipment_D64 * other_equipment_C9 / other_equipment_C13
+other_equipment_D65 = 2
+other_equipment_C10 = cepci_D16
+other_equipment_C11 = cepci_D26
+other_equipment_D59 = other_equipment_D58 * worley_uky_D231
+other_equipment_D54 = other_equipment_D53 * doe_baseline_inputs_E42 / doe_baseline_inputs_D42 * other_equipment_C10 / other_equipment_C11
+other_equipment_D49 = other_equipment_D48 * doe_baseline_inputs_E42 / doe_baseline_inputs_D42
+other_equipment_D67 = other_equipment_D65 * other_equipment_D66
+other_equipment_D60 = other_equipment_D59 * other_equipment_C9 / other_equipment_C13
+other_equipment_D55 = other_equipment_D54 * other_equipment_C9 / other_equipment_C10
+other_equipment_D50 = other_equipment_D49 * other_equipment_C9 / other_equipment_C11
+other_equipment_D22 = other_equipment_D67
+other_equipment_D21 = other_equipment_D60
+other_equipment_D20 = other_equipment_D55
+other_equipment_D19 = other_equipment_D50
+ngcc_capital_N52 = other_equipment_D19 + other_equipment_D20 + other_equipment_D21 + other_equipment_D22
+ngcc_result_summmary_miscellaneous = ngcc_capital_N52 / (10 ** 3)
 
 
 # Display output in Streamlit
-st.write(int(round(ngcc_result_summmary_co2_condenser_drum, 0)))
-st.write("goal is: 1,427 for norm, 0 for 400)")
+st.write(int(round(ngcc_result_summmary_miscellaneous, 0)))
+st.write("goal is: 10,827 for norm, 10 for 400)")
+
+
+
+
+# Calculating NGCC Allowance for Interconnections CO2 Removal BEC Breakdown
+worley_uky_D210 = 0.9
+worley_uky_D209 = 2460984.0408
+worley_uky_D206 = 0.9
+worley_uky_D205 = 3027600
+cepci_D24 = 593.6
+worley_uky_D51 = 2290808
+worley_uky_D52 = 3436217.9208
+worley_uky_D41 = 318864
+worley_uky_D42 = 1375009.82493333
+worley_uky_D62 = 35568
+worley_uky_D63 = 415544
+worley_uky_D40 = 16907
+worley_uky_D61 = 837000
+worley_uky_D48 = 200
+worley_uky_D47 = 62
+worley_uky_D50 = 26777
+worley_uky_D60 = 32452
+worley_uky_D38 = 450
+worley_uky_D37 = 18
+aspen_model_results_E76 = 304.4
+aspen_model_results_E70 = 928.6
+worley_uky_D58 = 450
+worley_uky_D57 = ((86 - 60) - (220 - 80)) / math.log((86 - 60 ) / (220 - 80))
+aspen_model_results_E59 = 3
+aspen_model_results_E57 = 40
+aspen_model_results_E50 = 5
+aspen_model_results_E48 = 65
+aspen_model_results_E58 = 31
+aspen_model_results_E60 = aspen_model_results_E57 + aspen_model_results_E59 * 8 + 15
+aspen_model_results_E52 = 2
+aspen_model_results_E49 = 67.3
+aspen_model_results_E51 = aspen_model_results_E48 + aspen_model_results_E50 * 10 + 10 + 25
+hx_D52 = aspen_model_results_E76 * (ngcc_process_D33 / aspen_model_results_E23)
+hx_D28 = aspen_model_results_E70 * (ngcc_process_D33 / aspen_model_results_E23)
+hx_D54 = math.ceil(hx_D77 / 27000)
+hx_D53 = hx_D52 / worley_uky_D57 / worley_uky_D58 * 1000000
+hx_D29 = hx_D28 / worley_uky_D37 / worley_uky_D38 * 1000000
+hx_D41 = hx_D40 / worley_uky_D47 / worley_uky_D48 * 1000000
+hx_D42 = math.ceil(hx_D41 / 27000)
+hx_D30 = math.ceil(hx_D29 / 17000)
+hx_D55 = hx_D53 / hx_D54
+hx_D43 = hx_D41 / hx_D42
+hx_D42 = math.ceil(hx_D41 / 27000)
+hx_D31 = hx_D29 / hx_D30
+hx_D56 = worley_uky_D61 * (hx_D55 / worley_uky_D60) ** hx_C9
+hx_D44 = worley_uky_D51 * (hx_D43 / worley_uky_D50) ** hx_C9
+hx_D32 = worley_uky_D41 * (hx_D31 / worley_uky_D40) ** hx_C9
+aspen_model_results_E62 = 7477660
+aspen_model_results_E61 = aspen_model_results_E60 * (aspen_model_results_E58 / 2) ** 2 * math.pi
+column_D42 = 
+aspen_model_results_E54 = 46228444
+aspen_model_results_E53 = aspen_model_results_E51 * (aspen_model_results_E49 / 2) ** 2 * math.pi * aspen_model_results_E52
+column_D32 = 
+cepci_D31 = 
+hx_D54 = math.ceil(hx_D77 / 27000)
+hx_D57 = hx_D56 * worley_uky_D63 / worley_uky_D62
+hx_D45 = hx_D44 * worley_uky_D52 / worley_uky_D51
+hx_D30 = math.ceil(hx_D29 / 17000)
+hx_D33 = hx_D32 * worley_uky_D42 / worley_uky_D41
+column_C8 = 0.7
+worley_uky_D10 = 2627591.60892106
+column_C9 = 0.9
+column_D43 = (column_D42 / aspen_model_results_E61) ** column_C9 * aspen_model_results_E62
+column_D33 = (column_D32 / aspen_model_results_E53) ** column_C9 * aspen_model_results_E54
+worley_uky_D18 = 39411710.08 / 2
+worley_uky_D189 = 304691.096155697
+pump_and_blower_D126 = 30
+pump_and_blower_D124 = 19.2
+pump_and_blower_D128 = ngcc_process_D30
+pump_and_blower_D129 = math.ceil(pump_and_blower_D128 / 320000)
+pump_and_blower_D125 = pump_and_blower_D124 / 2
+pump_and_blower_D130 = pump_and_blower_D128 / pump_and_blower_D129
+hx_C13 = cepci_D31
+hx_D58 = hx_D57 * hx_D54
+hx_D46 = hx_D45 * hx_D42
+hx_D34 = hx_D33 * hx_D30
+cepci_D22 = 576.1
+column_C10 = ngcc_process_D36
+column_D48 = 10000000 * (ngcc_process_D31 / worley_uky_D10) ** column_C8
+column_C11 = cepci_D17
+column_D44 = column_D43 * 1.45
+column_D34 = column_D33 * 1.38
+column_D25 = worley_uky_D18 * (ngcc_process_D30 / worley_uky_D9) ** column_C8
+other_equipment_D35 = worley_uky_D209 * (ngcc_process_D33 / worley_uky_D11) ** worley_uky_D210
+other_equipment_D30 = worley_uky_D205 * (ngcc_process_D33 / worley_uky_D11) ** worley_uky_D206
+worley_uky_D190 = worley_uky_D189 * 7.4805
+worley_uky_D187 = 1
+pump_and_blower_D132 = 0.83 # percentage
+pump_and_blower_D127 = (pump_and_blower_D124 + pump_and_blower_D125 + pump_and_blower_D126) * 0.0360812
+pump_and_blower_D131 = pump_and_blower_D130 * 7.4805
+pump_and_blower_D128 = ngcc_process_D30
+worley_uky_D192 = 955000
+worley_uky_D191 = worley_uky_D187 * worley_uky_D190 / 1714
+pump_and_blower_D133 = pump_and_blower_D131 * pump_and_blower_D127 / 1714 / pump_and_blower_D132
+other_equipment_D36 = other_equipment_D35 * doe_baseline_inputs_E42 / doe_baseline_inputs_D42
+other_equipment_C12 = cepci_D24
+other_equipment_D31 = other_equipment_D30 * doe_baseline_inputs_E42 / doe_baseline_inputs_D42
+hx_D59 = hx_D58 * hx_C10 / hx_C13
+hx_D47 = hx_D46 * hx_C10 / hx_C11
+hx_D35 = hx_D34 * hx_C10 / hx_C11
+column_D49 = column_D48 * column_C10 / cepci_D22
+column_D45 = column_D44 * column_C10 / column_C11
+column_D35 = column_D34 * column_C10 / column_C11
+column_D26 = column_D25 * column_C10 / cepci_D26
+pump_and_blower_D129 = math.ceil(pump_and_blower_D128 / 320000)
+pump_and_blower_D135 = pump_and_blower_D133 / worley_uky_D191 * worley_uky_D192
+worley_uky_D192 = 955000
+worley_uky_D193 = 1377000
+other_equipment_D37 = other_equipment_D36 * other_equipment_C9 / other_equipment_C11
+other_equipment_D32 = other_equipment_D31 * other_equipment_C9 / other_equipment_C12
+hx_D18 = hx_D59
+hx_D17 = hx_D47
+hx_D16 = hx_D35
+column_D17 = column_D49
+column_D16 = column_D45
+column_D15 = column_D35
+column_D14 = column_D26
+pump_and_blower_D136 = pump_and_blower_D135 * pump_and_blower_D129
+pump_and_blower_D137 = pump_and_blower_D136 * worley_uky_D193 / worley_uky_D192
+pump_and_blower_D138 = pump_and_blower_D137 * pump_and_blower_C10 / pump_and_blower_C12
+other_equipment_D17 = other_equipment_D37
+other_equipment_D16 = other_equipment_D32
+pump_and_blower_D28 = pump_and_blower_D138
+ngcc_capital_N26 = hx_D18
+ngcc_capital_N25 = hx_D17
+ngcc_capital_N24 = hx_D16
+ngcc_capital_N20 = column_D17
+ngcc_capital_N19 = column_D16
+ngcc_capital_N18 = column_D15
+ngcc_capital_N17 = column_D14
+ngcc_capital_N52 = other_equipment_D19 + other_equipment_D20 + other_equipment_D21 + other_equipment_D22
+ngcc_capital_N50 = other_equipment_D18
+ngcc_capital_N48 = other_equipment_D17
+ngcc_capital_N46 = other_equipment_D16
+ngcc_capital_N44 = pump_and_blower_D28
+ngcc_capital_N41 = ngcc_capital_N34 + ngcc_capital_N35 + ngcc_capital_N36 + ngcc_capital_N37 + ngcc_capital_N38 + ngcc_capital_N39 + ngcc_capital_N40
+ngcc_capital_N31 = ngcc_capital_N24 + ngcc_capital_N25 + ngcc_capital_N26 + ngcc_capital_N27 + ngcc_capital_N28 + ngcc_capital_N29 + ngcc_capital_N30
+ngcc_capital_N21 = ngcc_capital_N17 + ngcc_capital_N18 + ngcc_capital_N19 + ngcc_capital_N20
+ngcc_capital_N54 = ngcc_capital_N21 + ngcc_capital_N31 + ngcc_capital_N41 + ngcc_capital_N44 + ngcc_capital_N46 + ngcc_capital_N48 + ngcc_capital_N50 + ngcc_capital_N52
+ngcc_capital_N55 = ngcc_capital_N54 * 0.15
+ngcc_result_summmary_allowance_for_interconnections = ngcc_capital_N55 / (10 ** 3)
+
+
+# Display output in Streamlit
+st.write(int(round(ngcc_result_summmary_allowance_for_interconnections, 0)))
+st.write("goal is: 33,754 for norm, 23 for 400)")
+
