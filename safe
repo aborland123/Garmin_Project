@@ -512,6 +512,10 @@ if flue_gas == 'NGCC':
 
         # Calculating NGCC Condenser CO2 Removal BEC Breakdown
         def Calculate_NGCC_Condenser_CO2_Removal(cepci_baseline_user_input):
+            # Calculates condenser system BEC for NGCC CO₂ removal (in $1000s, 2018 USD).
+            # Scales Aspen-calculated heat duties to project flow rates, computes required HX area,
+            # scales costs from reference PEC using area-based scaling, and adjusts to 2018 CEPCI.
+            # Includes both condenser and lean cooler components.
             aspen_lean_cooler_duty_mmbtu_hr = constants_dict_df["con_asp_lean_cool_duty"]
             aspen_condenser_duty_duty_mmbtu_hr = constants_dict_df["con_asp_duty"]
             worl_lean_cooler_ohtc_btu_ft2hF = constants_dict_df["con_worl_lean_cool_ohtc"]
@@ -545,6 +549,10 @@ if flue_gas == 'NGCC':
 
         # Calculating NGCC all other HXs CO2 Removal BEC Breakdown
         def Calculate_NGCC_All_Other_HXs_CO2_Removal(cepci_baseline_user_input):
+            # Calculates total BEC for remaining NGCC heat exchangers (WW, lean cooler, DCC, intercooler).
+            # Scales Aspen heat duties to process flows, computes HX areas and number of units,
+            # applies cost scaling using reference HX data and OHTC/LMTD values,
+            # adjusts all costs to Dec 2018 USD and returns combined BEC in thousands.
             aspen_flue_gas_flow_before_dcc_kg_hr = constants_dict_df["all_asp_fg_flow_b4"] 
             proc_ref_flue_gas_aftr_dcc_kg_hr = constants_dict_df["all_pro_fg_flow_aft"] 
             proc_ref_flue_gas_before_dcc_acfm = constants_dict_df["all_pro_fg_flow_b4"] 
@@ -615,6 +623,10 @@ if flue_gas == 'NGCC':
 
         # Calculating NGCC Lean Pump CO2 Removal BEC Breakdown
         def Calculate_NGCC_Lean_Pump_CO2_Removal(cepci_baseline_user_input):
+            # Calculates the BEC for NGCC lean solvent pumps used in CO2 removal.
+            # Computes pressure drops, solvent flowrates, and pump power requirements,
+            # applies pump cost scaling using historical work and cost data,
+            # converts all values to Dec 2018 USD and returns total BEC in thousands.
             pump_lean_pump_eff_pct = constants_dict_df["lp_pump_lp_efficiency"]
             pump_lean_pump_num_psi = constants_dict_df["lp_pump_lp_num"]
             pump_lean_solv_dens_lbs_gal = constants_dict_df["lp_pump_lp_solv_dens"]
@@ -654,6 +666,10 @@ if flue_gas == 'NGCC':
 
         # Calculating NGCC Rich Pump CO2 Removal BEC Breakdown                                                                  
         def Calculate_NGCC_Rich_Pump_CO2_Removal(cepci_baseline_user_input):
+            # Calculates the BEC for NGCC rich solvent pumps used in CO2 removal.
+            # Estimates flowrate, vessel volume, and pressure drops based on process data.
+            # Applies pump work and cost scaling using reference values and scaling laws.
+            # Converts total cost to Dec 2018 USD and returns BEC in thousands.
             proc_co2_mass_frac_aftr_dcc = constants_dict_df["rp_proc_co2_mass_frac_aft_dcc"] 
             pump_rich_pump_num_oper = constants_dict_df["rp_pump_rich_pum_num_oper"]
             pump_rich_solv_dens_lbs_gal = constants_dict_df["rp_pump_rich_solv_dens"]
@@ -705,6 +721,10 @@ if flue_gas == 'NGCC':
 
         # Calculating NGCC Intercooling Pump, mid CO2 Removal BEC Breakdown
         def Calculate_NGCC_Intercooling_Pump_Mid_CO2_Removal(cepci_baseline_user_input):
+            # Calculates the BEC for NGCC intercooling pumps used in CO2 removal.
+            # Determines total and per-pump work based on process flow and pressure data.
+            # Applies cost scaling using historical pump data and a scaling exponent.
+            # Converts cost from June 2011 to Dec 2018 USD and returns total BEC in thousands.
             pump_blower_2011_jun = constants_dict_df["ip_pump_cepci_cost_index"]
             pump_intcool_pump_eff_pct = constants_dict_df["ip_pump_ip_efficently"]
             pump_intcool_solv_dens_lb_gal = constants_dict_df["ip_pump_ip_solv_dens"]
@@ -734,6 +754,10 @@ if flue_gas == 'NGCC':
 
         # Calculating NGCC Other Pumps CO2 Removal BEC Breakdown
         def Calculate_NGCC_Other_Pumps(cepci_baseline_user_input):
+            # Calculates total BEC for miscellaneous NGCC pumps involved in CO2 removal.
+            # Covers solvent makeup, water wash, DCC, and condensate pumps using process flows.
+            # Uses historical cost data scaled by flow rates and a pump-specific scaling exponent.
+            # Converts costs from June 2011 to Dec 2018 USD and returns the total BEC in thousands.
             pump_water_wp_condensate_fr_lean_solvent_fr = constants_dict_df["op_pump_water_wp_cond_fr_lean_solv_fr"]
             worl_lean_solv_fr_absor_kg_hr = constants_dict_df["op_worl_lean_solv_fr_absor"]
             pump_lean_solv_dens_lbs_gal = constants_dict_df["op_pump_lean_solv_dens"]
@@ -780,6 +804,11 @@ if flue_gas == 'NGCC':
 
         # Calculating NGCC Blower CO2 Removal BEC Breakdown   
         def Calculate_NGCC_Blower_CO2_Removal(cepci_baseline_user_input):
+            # Calculates total BEC for all major NGCC blowers and pumps used in CO2 removal.
+            # Includes lean, rich, intercooler, solvent makeup, water wash, DCC, and condensate pumps.
+            # Uses process-specific flow rates and pressure drops with scaling factors from baseline data.
+            # Adjusts all equipment costs from June 2011 to Dec 2018 using CEPCI.
+            # Returns total blower and pump BEC in thousands of 2018 USD.
             pump_scale_factor = constants_dict_df["blow_pump_sf"]
             pump_blower_2011_jun = constants_dict_df["blow_pump_blow"]
             worl_rich_pumps_dp_psi = constants_dict_df["blow_worl_rich_pumps_dp"]
@@ -918,6 +947,10 @@ if flue_gas == 'NGCC':
 
         # Calculating NGCC Reclaimer CO2 Removal BEC Breakdown
         def Calculate_NGCC_Reclaimer_CO2_Removal(cepci_baseline_user_input):
+            # Calculates BEC for the NGCC CO2 condenser drum used in solvent condensation.
+            # Scales baseline cost data based on lean solvent flow rate and fuel feed rate ratios.
+            # Applies a condenser-specific scaling factor and adjusts costs using CEPCI.
+            # Converts final cost from June 2011 to Dec 2018 and returns BEC in thousands of USD.
             worl_other_equ_rec_sf = constants_dict_df["rec_worl_oth_equ_rec_sf"]
             worl_other_equ_rec_bec_b31b = constants_dict_df["rec_worl_oth_equ_rec_bec_b31b"]
             worl_lean_solv_fr_absor_kg_hr = constants_dict_df["rec_worl_lean_solv_fr_absor"]
@@ -934,6 +967,10 @@ if flue_gas == 'NGCC':
 
         # Calculating NGCC CO2 Condenser Drum CO2 Removal BEC Breakdown
         def Calculate_NGCC_Condenser_Drum_CO2_Removal(cepci_baseline_user_input):
+            # Calculates BEC for NGCC solvent storage tanks used in CO2 removal systems.
+            # Uses lean solvent flow to scale Aspen-based PEC cost data with a tank-specific exponent.
+            # Converts PEC to BEC using a multiplier and adjusts cost using CEPCI.
+            # Returns total cost for all solvent tanks in thousands of USD.
             doe_base_b12b_2015_fuel_feed_rate = constants_dict_df["cd_doe_base_ref_2015_fuel_feed_rt"]
             doe_base_b12b_2019_fuel_feed_rate = constants_dict_df["cd_doe_base_ref_2019_fuel_feed_rt"]
             cepci_2011_jun = constants_dict_df["cd_cepci_2011_jun"]
@@ -950,6 +987,10 @@ if flue_gas == 'NGCC':
 
         # Calculating NGCC Solvent tank CO2 Removal BEC Breakdown
         def Calculate_NGCC_Solvent_Tank_CO2_Removal(cepci_baseline_user_input):
+            # Calculates BEC for NGCC solvent storage tanks used in CO2 removal systems.
+            # Scales Aspen PEC data based on lean solvent flow using a tank-specific exponent.
+            # Converts PEC to BEC, adjusts cost with CEPCI, and applies number of tanks.
+            # Returns total BEC in thousands of USD.
             worl_sst_sf = constants_dict_df["st_worl_sst_sf"]
             worl_sst_tfr_gpm = constants_dict_df["st_worl_sst_tfr"]
             pump_lean_solv_dens_lbs_gal = constants_dict_df["st_pump_lean_solv_dens"]
@@ -969,6 +1010,10 @@ if flue_gas == 'NGCC':
         
         # Calculating NGCC Miscellaneous CO2 Removal BEC Breakdown
         def Calculate_NGCC_Miscellaneous_CO2_Removal(cepci_baseline_user_input):
+            # Calculates BEC for miscellaneous NGCC CO2 removal components like condenser, recovery, and makeup tanks.
+            # Uses flow rates, Aspen duties, and cost scaling factors to estimate PEC and convert to BEC.
+            # Adjusts costs for inflation using CEPCI indices and fuel feed rate ratios.
+            # Returns total BEC in thousands of USD.
             aspen_cross_duty_mmbtu_hr = constants_dict_df["misc_asp_cross_duty"]
             worl_cond_tank_sf_pec_bec = constants_dict_df["misc_worl_cond_tank_sf_pec_bec"]
             worl_cond_tank_sf = constants_dict_df["misc_worl_cond_tank_sf"]
@@ -1018,6 +1063,10 @@ if flue_gas == 'NGCC':
 
         # Calculating NGCC Allowance for Interconnections CO2 Removal BEC Breakdown   
         def Calculate_NGCC_Allowance_CO2_Removal(cepci_baseline_user_input):
+            # Calculates BEC for miscellaneous NGCC CO2 removal components like condenser, recovery, and makeup tanks.
+            # Uses process flow, Aspen heat duties, and DOE reference data to estimate PECs.
+            # Applies scaling exponents and CEPCI indices to convert to BEC in December 2018 USD.
+            # Returns total capital BEC in thousands of dollars.
             worl_other_equ_cond_sf = constants_dict_df["afi_worl_oth_equ_cond_sf"]
             worl_other_equ_cond_bec_cost_jun_2011 = constants_dict_df["afi_worl_oth_equ_cond_bec"]
             worl_other_equ_rec_sf = constants_dict_df["afi_worl_oth_equ_rec_sf"]
@@ -1416,6 +1465,10 @@ if flue_gas == 'NGCC':
 
 
         def Calculate_Inputs_Wtr_Balanc_Raw_Wtr_Withdrwl_Total():
+            # Calculates total raw water withdrawal for NGCC with CO2 removal using DOE and Aspen data.
+            # Computes water demands for cooling tower, condensate makeup, and CO2 systems.
+            # Accounts for process flows, cooling loads, and internal recycle assumptions (set to zero).
+            # Returns the final raw water withdrawal value used in LCOE calculations.
             doe_baseline_b32b_exhbt_5_30 = constants_dict_df["lcoe_doe_base_b32b_exhbt_5_30"]
             doe_baseline_b32b_exhbt_5_23 = constants_dict_df["lcoe_doe_baseline_b32b_exhbt_cooling_duty_5_23"]
             doe_baseline_b32b_exhbt_power_plt_5_23 = constants_dict_df["lcoe_doe_baseline_b32b_exhbt_power_plt_5_23"]
@@ -1501,6 +1554,10 @@ if flue_gas == 'NGCC':
         
 
         def Calculate_Capital_Total_Project_Plant_Cost(cepci_baseline_user_input, eng_baseline_user_input, pc_baseline_user_input):
+            # Calculates total NGCC plant capital cost with CO2 removal systems.
+            # Includes allowances, engineering, process contingencies, and equipment costs.
+            # Uses DOE baseline data, process scaling, and CEPi indices for adjustment.
+            # Returns the total capital project cost in USD.
             proc_ref_flue_gas_aftr_dcc_kg_hr = constants_dict_df["lcoe_proc_ref_fg_aft_dcc"]
             doe_NGCC_capital_AE61 = constants_dict_df["lcoe_tpc_feedwtr_misc_subtotal_tpc"]
             doe_NGCC_capital_AE80 = constants_dict_df["lcoe_tpc_flue_gas_cleanup_gas_clnup_found_tpc"]
@@ -1575,6 +1632,10 @@ if flue_gas == 'NGCC':
 
     
         def Calculate_TASC_dollars(cepci_baseline_user_input, cf_baseline_user_input): 
+            # Calculates the Total As-Spent Capital (TASC) cost for the NGCC plant with CO2 removal.
+            # Includes capital costs, contingency, startup, initial fill, and annual O&M costs.
+            # Uses cost multipliers, DOE baselines, and CEPi index to adjust values.
+            # Returns TASC in USD.
             proc_ref_cf_b31b = constants_dict_df["lcoe_proc_cf_ref_b31b"]
             doe_om_b31b_var_oper_cost_cons_per_day = constants_dict_df["lcoe_doe_om_b31b_var_oper_cost_cons_per_day"]             
             doe_ref_b32b_total_raw_wtr_withdrawl = constants_dict_df["lcoe_doe_ref_b32b_total_raw_wtr_withdrawl"]
@@ -1616,6 +1677,10 @@ if flue_gas == 'NGCC':
 
 
         def Calculate_OM_Fixed_Oper_Cost_Annual_Total_Cost(cepci_baseline_user_input, eng_baseline_user_input, pc_baseline_user_input, lr_baseline_user_input):
+            # Calculates the total fixed annual O&M cost for the NGCC plant.
+            # Includes operations labor, maintenance labor, administrative costs, and overhead.
+            # Uses labor rate, TPC, and DOE baseline factors.
+            # Returns total fixed operating cost per year in USD.
             lcoe_cap_om_operat_labor_shift_total = constants_dict_df["lcoe_cap_om_operat_labor_shift_total"]
             om_oper_maintenance_labor_burden = constants_dict_df["lcoe_om_oper_maintenance_labor_burden"]
             
@@ -1630,6 +1695,9 @@ if flue_gas == 'NGCC':
 
 
         def Calculate_res_net_power_out_mw():
+            # Calculates the net power output (MW) from the NGCC power plant after auxiliary loads.
+            # Uses detailed DOE baseline inputs, process flow rates, pump/blower loads, and cooling duties.
+            # Subtracts estimated total auxiliary power consumption from gross power to return net output.
             doe_baseline_inputs_E166 = constants_dict_df["lcoe_doe_base_est_aux_load_comb_turb_pow"]
             doe_baseline_inputs_E167 = constants_dict_df["lcoe_doe_base_est_aux_load_stm_turb_pow_b31b"]
             doe_baseline_inputs_E171 = constants_dict_df["lcoe_doe_base_est_aux_load_circ_wtr_pump_b31b"]
@@ -1902,6 +1970,10 @@ if flue_gas == 'NGCC':
 
 
         def Calculate_om_co2_remove_by_product_var_operat_cost_annual_total(cepci_baseline_user_input, cf_baseline_user_input, sup_baseline_user_input, eng_baseline_user_input, pc_baseline_user_input):# R54 O%M
+            # Calculates the variable O&M cost for NGCC CO2 removal systems.
+            # Includes costs for water, chemicals, TEG, ammonia, catalysts, and maintenance.
+            # Adds waste treatment and by-product handling for a complete annual cost estimate.
+            # Returns total CO2 removal variable O&M cost per year in dollars.
             doe_om_cf_percent = constants_dict_df["lcoe_doe_om_cf_percent"]
             proc_ref_co2_mass_frac_aft_dcc_b31b = constants_dict_df["lcoe_prof_ref_b31b_co2_mass_frac_aft_dcc"]
             proc_ref_co2_capture_rate_user_input = constants_dict_df["lcoe_ref_co2_capture_rate"]
@@ -1912,7 +1984,7 @@ if flue_gas == 'NGCC':
             worl_lean_solv_fr_absor_kg_hr4 = constants_dict_df["lcoe_worl_co2_aftcool_sf"]
             worl_compr_cost_bec_b12b_2019_baseline = constants_dict_df["lcoe_worl_compr_cost_bec_b12b_2019_baseline"]
             worl_comp_sf = constants_dict_df["lcoe_worl_comp_sf"]
-            proc_ref_flue_gas_aftr_dcc_kg_hr = constants_dict_df["dcc_ref_fg_flow_aft"] # 3889650
+            proc_ref_flue_gas_aftr_dcc_kg_hr = constants_dict_df["dcc_ref_fg_flow_aft"] 
             doe_om_b31b_waste_anime_purif_unit_day = constants_dict_df["lcoe_doe_om_b31b_waste_anime_purif_unit_day"]
             doe_om_b31b_waste_scr_catalyst_day = constants_dict_df["lcoe_doe_om_b31b_waste_scr_catalyst_day"]
             doe_om_b31b_cons_teg_gal_day = constants_dict_df["lcoe_doe_om_b31b_cons_teg_gal_day"]
@@ -2009,6 +2081,9 @@ if flue_gas == 'NGCC':
 
 
         def Calculate_res_net_power_out_w_o_ccs():
+            # Calculates net power output without CO2 capture systems (CCS).
+            # Adds turbine power and steam turbine output, subtracts auxiliary power loads.
+            # Accounts for flue gas flow adjustments and returns net power output in MW.
             lcoe_doe_base_est_aux_load_circ_wtr_pump_b31a = constants_dict_df["lcoe_doe_base_est_aux_load_circ_wtr_pump_b31a"]
             lcoe_doe_base_est_aux_load_comb_turb_aux_b31a = constants_dict_df["lcoe_doe_base_est_aux_load_comb_turb_aux_b31a"]
             lcoe_doe_base_est_aux_load_cond_pump_b31a = constants_dict_df["lcoe_doe_base_est_aux_load_cond_pump_b31a"]
@@ -2037,6 +2112,10 @@ if flue_gas == 'NGCC':
 
 
         def Calculate_NGCC_LCOE_Capital_With_Net_Pow_w_o_CCS(cepci_baseline_user_input, cf_baseline_user_input, lr_baseline_user_input, ng_baseline_user_input, fcr_baseline_user_input):
+            # Calculates the LCOE capital cost using net power output without CCS.
+            # Includes scaled capital components, variable and fixed O&M costs, and startup fills.
+            # Applies CEPCI-based inflation, fuel costs, and staffing burden.
+            # Converts to annualized cost using the capital recovery factor and capacity factor.
             res_annual_hour = constants_dict_df["lcoe_res_annual_hour"]
             proc_ref_flue_gas_aftr_dcc_kg_hr = constants_dict_df["lcoe_proc_ref_fg_aftr_dcc"]
             cap_ref_tpc_b31a_feed_wat_misc_bop_sys_1000 = constants_dict_df["lcoe_cap_ref_tpc_b31a_feed_wat_misc_bop_sys_1000"]
@@ -2179,6 +2258,9 @@ if flue_gas == 'NGCC':
              
 
         def Calculate_NGCC_LCOE_Fixed_Op_With_Net_Pow_w_o_CCS(lr_baseline_user_input, cf_baseline_user_input):
+            # Calculates the LCOE fixed operating cost using net power output without CCS.
+            # Includes labor, maintenance, property tax, and insurance based on capital costs.
+            # Annual cost is divided by net energy output to get $/MWh.
             res_annual_hour = constants_dict_df["lcoe_res_annual_hour"]
             proc_ref_flue_gas_aftr_dcc_kg_hr = constants_dict_df["lcoe_proc_ref_fg_aftr_dcc"]
             cap_ref_tpc_b31a_feed_wat_misc_bop_sys_1000 = constants_dict_df["lcoe_cap_ref_tpc_b31a_feed_wat_misc_bop_sys_1000"]
@@ -2278,6 +2360,9 @@ if flue_gas == 'NGCC':
 
         
         def co2_captured_analysis_baseline(cepci_baseline_user_input, fcr_baseline_user_input, cf_baseline_user_input, ng_baseline_user_input, sup_baseline_user_input, lr_baseline_user_input, tsc_baseline_user_input, eng_baseline_user_input, pc_baseline_user_input):
+            # Calculates baseline cost of CO2 captured using total LCOE with and without CCS.
+            # Factors in capital, fixed, variable, and fuel costs, then compares net cost difference.
+            # Divides cost savings by estimated CO2 captured over one year to get $/ton.
             res_annual_hour = constants_dict_df["lcoe_res_annual_hour"]
             proc_co2_mass_frac_aftr_dcc = constants_dict_df["lcoe_proc_co2_mass_frac_aftr_dcc"]
             
@@ -2565,7 +2650,7 @@ if flue_gas == 'SC PC':
 
         # Calculating SC PC Absorber CO2 Removal BEC Breakdown
         def Calculate_SC_PC_Absorber_CO2_Removal():
-            # Calculating NGCC Absorber CO2 Removal Bare Erected Cost (BEC)
+            # Calculating SC PC Absorber CO2 Removal Bare Erected Cost (BEC)
             # Estimates absorber dimensions and volume from flue gas flow and packing parameters
             # Scales absorber cost based on volume ratios and cost indices from Aspen and CEPCI data
             # Converts 2018 cost estimate to thousands of dollars for output summary
@@ -2663,7 +2748,7 @@ if flue_gas == 'SC PC':
         def Calculate_SC_PC_Cross_HX_CO2_Removal():
             # Estimate Cross HX duty based on Aspen design and process flow scaling,
             # calculate required HX area and unit count using thermal design data,
-            # scale unit cost from Worley reference HX and adjust to 2018 dollars,
+            # scale unit cost from Worley reference HX and adjust to dollars,
             # then return total bare erected cost (BEC) in thousands of dollars.
 
             aspen_cross_duty_mmbtu_hr = constants_dict_df["chx_asp_duty"]
@@ -2692,6 +2777,9 @@ if flue_gas == 'SC PC':
 
         # Calculating SC PC Reboiler CO2 Removal BEC Breakdown
         def Calculate_SC_PC_Reboiler_CO2_Removal():
+            # Calculates total BEC (Bare Erected Cost) for SC PC reboiler in dollars.
+            # Scales reboiler area and duty from Aspen data and Worley design assumptions.
+            # Computes number of heat exchangers needed and adjusts cost based on size.
             aspen_reb_mmbtu_hr = constants_dict_df["reb_asp_reb_duty"]
             worley_reboiler_ohtc_btu_ft2hf = constants_dict_df["reb_worl_OHTC"]
             worley_reboiler_lmtd_f = constants_dict_df["reb_worl_LMTD"]
@@ -2718,6 +2806,9 @@ if flue_gas == 'SC PC':
 
         # Calculating SC PC Condenser CO2 Removal BEC Breakdown
         def Calculate_SC_PC_Condenser_CO2_Removal():
+            # Calculates total BEC (Bare Erected Cost) for SC PC condenser in dollars.
+            # Scales heat exchanger area from Aspen data and Worley design assumptions.
+            # Adjusts cost from 2007 to 2018 using cost index and condenser-specific scaling.
             aspen_lean_cooler_duty_mmbtu_hr = constants_dict_df["con_asp_lean_cool_duty"]
             aspen_condenser_duty_duty_mmbtu_hr = constants_dict_df["con_asp_duty"]
             worl_lean_cooler_ohtc_btu_ft2hF = constants_dict_df["con_worl_lean_cool_ohtc"]
@@ -2750,6 +2841,9 @@ if flue_gas == 'SC PC':
 
         # Calculating SC PC all other HXs CO2 Removal BEC Breakdown
         def Calculate_SC_PC_All_Other_HXs_CO2_Removal():
+            # Calculates total BEC for SC PC auxiliary heat exchangers in 2018 dollars.
+            # Includes lean cooler, DCC cooler, intercooler, and water wash units.
+            # Uses Aspen duty values, Worley design data, and cost indices scaled by area.
             aspen_flue_gas_flow_before_dcc_kg_hr = constants_dict_df["all_asp_fg_flow_b4"] 
             proc_ref_flue_gas_aftr_dcc_kg_hr = constants_dict_df["all_pro_fg_flow_aft"] 
             proc_ref_flue_gas_before_dcc_acfm = constants_dict_df["all_pro_fg_flow_b4"] 
@@ -2821,6 +2915,9 @@ if flue_gas == 'SC PC':
 
         # Calculating SC PC Lean Pump CO2 Removal BEC Breakdown
         def Calculate_SC_PC_Lean_Pump_CO2_Removal(cepci_baseline_user_input):
+            # Calculates total BEC for SC PC lean pumps used in CO2 removal.
+            # Uses process flow rates, absorber height, and pump efficiency to scale power requirements.
+            # Applies Worley design data and adjusts 2011 cost estimates to December 2018 USD.
             pump_lean_pump_eff_pct = constants_dict_df["lp_pump_lp_efficiency"]
             pump_lean_pump_num_psi = constants_dict_df["lp_pump_lp_num"]
             pump_lean_solv_dens_lbs_gal = constants_dict_df["lp_pump_lp_solv_dens"]
@@ -2860,6 +2957,9 @@ if flue_gas == 'SC PC':
 
         # Calculating SC PC Rich Pump CO2 Removal BEC Breakdown                                                                  
         def Calculate_SC_PC_Rich_Pump_CO2_Removal(cepci_baseline_user_input):
+            # Calculates total BEC for SC PC rich pumps used in CO2 removal.
+            # Determines flow rates and pressure drop using stripper vessel volume and solvent density.
+            # Applies Worley pump scaling data and adjusts 2011 costs to December 2018 USD.
             proc_co2_mass_frac_aftr_dcc = constants_dict_df["rp_proc_co2_mass_frac_aft_dcc"] 
             pump_rich_pump_num_oper = constants_dict_df["rp_pump_rich_pum_num_oper"]
             pump_rich_solv_dens_lbs_gal = constants_dict_df["rp_pump_rich_solv_dens"]
@@ -2910,6 +3010,9 @@ if flue_gas == 'SC PC':
 
         # Calculating SC PC Intercooling Pump, mid CO2 Removal BEC Breakdown
         def Calculate_SC_PC_Intercooling_Pump_Mid_CO2_Removal(cepci_baseline_user_input):
+            # Calculates total BEC for SC PC intercooling pumps used in CO2 removal.
+            # Uses solvent flow and pump efficiency to scale cost from reference values.
+            # Adjusts 2011 pump costs to December 2018 using the cost index.
             pump_blower_2011_jun = constants_dict_df["ip_pump_cepci_cost_index"]
             pump_intcool_pump_eff_pct = constants_dict_df["ip_pump_ip_efficently"]
             pump_intcool_solv_dens_lb_gal = constants_dict_df["ip_pump_ip_solv_dens"]
@@ -2937,6 +3040,8 @@ if flue_gas == 'SC PC':
 
         # Calculating SC PC Other Pumps CO2 Removal BEC Breakdown
         def Calculate_SC_PC_Other_Pumps():
+            # Calculates total BEC for all other SC PC pumps (solvent makeup, water wash, DCC, condenser, SO2 polisher).
+            # Uses flow scaling from reference values and adjusts 2011 costs to December 2018 using cost indices.
             pump_water_wp_condensate_fr_lean_solvent_fr = constants_dict_df["op_pump_water_wp_cond_fr_lean_solv_fr"]
             worl_lean_solv_fr_absor_kg_hr = constants_dict_df["op_worl_lean_solv_fr_absor"]
             pump_lean_solv_dens_lbs_gal = constants_dict_df["op_pump_lean_solv_dens"]
@@ -2990,6 +3095,9 @@ if flue_gas == 'SC PC':
 
         # Calculating SC PC Blower CO2 Removal BEC Breakdown   
         def Calculate_SC_PC_Blower_CO2_Removal():
+            # Calculates total BEC for SC PC blowers used in CO2 removal.
+            # Scales blower costs based on flue gas flow and pressure drop compared to reference data.
+            # Converts June 2011 blower costs to December 2018 USD and returns total in thousands.
             proc_fg_flue_rt_b4_dcc_acfm_ref = constants_dict_df["blow_proc_fg_flue_rt_b4_dcc_ref"]
             proc_fg_flue_rt_aft_dcc_kg_hr_ref = constants_dict_df["blow_proc_fg_flue_rt_aft_dcc_ref"]
             worl_blower_pec_june_2011 = constants_dict_df["blow_worl_blower_pec"]
@@ -3022,6 +3130,9 @@ if flue_gas == 'SC PC':
 
         # Calculating SC PC Reclaimer CO2 Removal BEC Breakdown
         def Calculate_SC_PC_Reclaimer_CO2_Removal():
+            # Calculates total BEC for SC PC reclaimer equipment used in CO2 removal.
+            # Scales cost based on lean solvent flow and adjusts for fuel feed rate difference from DOE base case.
+            # Converts January 2012 cost to December 2018 USD and returns total in thousands.
             worl_other_equ_rec_sf = constants_dict_df["rec_worl_oth_equ_rec_sf"]
             worl_other_equ_rec_bec_b31b = constants_dict_df["rec_worl_oth_equ_rec_bec_b31b"]
             worl_lean_solv_fr_absor_kg_hr = constants_dict_df["rec_worl_lean_solv_fr_absor"]
@@ -3038,6 +3149,9 @@ if flue_gas == 'SC PC':
 
         # Calculating SC PC CO2 Condenser Drum CO2 Removal BEC Breakdown
         def Calculate_SC_PC_Condenser_Drum_CO2_Removal():
+            # Calculates BEC for the SC PC CO2 condenser drum based on lean solvent flow.
+            # Scales cost for fuel feed rate differences and updates 2011 cost to 2018 USD.
+            # Returns total cost in thousands.
             doe_base_b12b_2015_fuel_feed_rate = constants_dict_df["cd_doe_base_ref_2015_fuel_feed_rt"]
             doe_base_b12b_2019_fuel_feed_rate = constants_dict_df["cd_doe_base_ref_2019_fuel_feed_rt"]
             cepci_2011_jun = constants_dict_df["cd_cepci_2011_jun"]
@@ -3054,6 +3168,9 @@ if flue_gas == 'SC PC':
 
         # Calculating SC PC Solvent tank CO2 Removal BEC Breakdown
         def Calculate_SC_PC_Solvent_Tank_CO2_Removal():
+            # Calculates BEC for SC PC solvent storage tanks based on lean solvent flow.
+            # Scales from Aspen PEC estimate, applies PEC to BEC factor, and adjusts to 2018 dollars.
+            # Returns total cost in thousands.
             worl_sst_sf = constants_dict_df["st_worl_sst_sf"]
             worl_sst_tfr_gpm = constants_dict_df["st_worl_sst_tfr"]
             pump_lean_solv_dens_lbs_gal = constants_dict_df["st_pump_lean_solv_dens"]
@@ -3073,6 +3190,8 @@ if flue_gas == 'SC PC':
 
         # Calculating SC PC Miscellaneous CO2 Removal BEC Breakdown
         def Calculate_SC_PC_Miscellaneous_CO2_Removal():
+            # Calculates BEC for miscellaneous SC PC CO2 removal equipment
+            # Returns total cost in thousands.
             aspen_reb_mmbtu_hr = constants_dict_df["misc_asp_reboiler"] 
             worl_cond_tank_sf_pec_bec = constants_dict_df["misc_worl_cond_tank_sf_pec_bec"]
             worl_cond_tank_stream_ext_rate_coal = constants_dict_df["misc_worl_cond_tank_stm_ext_rt_coal"]
@@ -3127,6 +3246,9 @@ if flue_gas == 'SC PC':
 
         # Calculating SC PC Allowance for Interconnections CO2 Removal BEC Breakdown   
         def Calculate_SC_PC_Allowance_CO2_Removal(cepci_baseline_user_input):
+            # Calculates the BEC (Bare Erected Cost) for miscellaneous SC PC CO2 removal components.
+            # Adjusts all cost values based on CEPCI indices and fuel feed rate references.
+            # Returns total capital cost in 1000s of USD.
             worl_other_equ_cond_sf = constants_dict_df["afi_worl_oth_equ_cond_sf"]
             worl_other_equ_cond_bec_cost_jun_2011 = constants_dict_df["afi_worl_oth_equ_cond_bec"]
             worl_other_equ_rec_sf = constants_dict_df["afi_worl_oth_equ_rec_sf"]
@@ -3178,13 +3300,13 @@ if flue_gas == 'SC PC':
             aspen_strip_cost_1q2018_pec_2 = constants_dict_df["afi_asp_strip_cost_aspen_1q2018_pec_2"]
             aspen_str_packing_height_ft = constants_dict_df["afi_asp_strip_pack_height"] 
             aspen_str_packing_section = constants_dict_df["afi_asp_strip_pack_section"]
-            asp_str_diameter_ft = constants_dict_df["afi_asp_strip_diameter"] # here 
+            asp_str_diameter_ft = constants_dict_df["afi_asp_strip_diameter"] 
             aspen_cols_cost_by_aspen_1q2018_pec_2 = constants_dict_df["afi_asp_cols_cost_aspen_1q2018_pec_2"]
             other_equ_jun_11 = constants_dict_df["afi_oth_equ_cepci_cost_index_jun"]
             worley_cross_hx_lmtd_f = constants_dict_df["afi_worl_cross_hx_lmtd"]
             worley_cross_hx_ohtc_btu_ft2hf = constants_dict_df["afi_worl_cross_hx_ohtc"]
-            worl_cond_tank_sf_pec_bec = constants_dict_df["afi_worl_cond_tank_sf_pec_bec"] # here 1.91
-            doe_baseline_b32b_stm_ethalpy_chnge_5_22_exhbt = constants_dict_df["afi_doe_baseline_b32b_stm_ethalpy_chge"] # here
+            worl_cond_tank_sf_pec_bec = constants_dict_df["afi_worl_cond_tank_sf_pec_bec"] 
+            doe_baseline_b32b_stm_ethalpy_chnge_5_22_exhbt = constants_dict_df["afi_doe_baseline_b32b_stm_ethalpy_chge"] 
             doe_baseline_b32b_stm_extrac_rate_5_29_exhbt = constants_dict_df["afi_doe_baseline_b32b_stm_extract_rate"]
             worl_solv_rec_tank_fr = constants_dict_df["afi_worl_solv_rec_tank_fr"]
             worl_solv_rec_tank_sf = constants_dict_df["afi_worl_solv_rec_tank_sf"]
@@ -3514,6 +3636,8 @@ if flue_gas == 'SC PC':
                 st.error(f"{e}")
 
         def Calculate_inputs_heat_balance_cool_tower_load():
+            # Calculates the total cooling tower load in MMBtu/hr for the NGCC process.
+            # Returns the total cooling requirement in MMBtu/hr.
             doe_base_heat_balance_cool_tower_load_exh_4_65 = constants_dict_df["lcoe_doe_base_heat_balance_cool_tower_load_exh_4_65"] 
             aspen_intercooler_duty_mmbtu_hr = constants_dict_df["lcoe_aspen_intercooler_duty_mmbtu_hr"]
             aspen_flue_gas_flow_before_dcc_kg_hr = constants_dict_df["lcoe_aspen_flue_gas_flow_before_dcc_kg_hr"]
@@ -3561,6 +3685,10 @@ if flue_gas == 'SC PC':
             return inputs_cooling_total_mmbtu_hr + inputs_heat_balance_misc_cool_loads + inputs_heat_balance_pow_plt_cond_cool_duty
 
         def Calculate_Inputs_Wtr_Balanc_Raw_Wtr_Withdrwl_Total():
+            # Calculates total raw water withdrawal for NGCC water balance.
+            # Based on cooling tower and boiler feedwater makeup water demands.
+            # Uses DOE reference data scaled by process-specific flue gas flows and cooling loads.
+            # Returns total raw water withdrawal in consistent units (likely kg/hr).
             doe_base_heat_balance_cool_tower_load_exh_4_65 = constants_dict_df["lcoe_doe_base_heat_balance_cool_tower_load_exh_4_65"] 
             proc_ref_flue_gas_aftr_dcc_kg_hr = constants_dict_df["lcoe_proc_ref_flue_gas_aftr_dcc_kg_hr"]
             proc_ref_flue_gas_before_dcc_kg_hr = constants_dict_df["lcoe_proc_ref_flue_gas_before_dcc_kg_hr"]
@@ -3600,6 +3728,11 @@ if flue_gas == 'SC PC':
 
 
         def Calculate_Capital_Total_Project_Plant_Cost(cepci_baseline_user_input, eng_baseline_user_input, pc_baseline_user_input):
+            # Calculates total capital project cost for a new SC PC plant with CO2 removal.
+            # Combines direct BEC costs, engineering, and project contingency multipliers.
+            # Scales DOE baseline subsystem costs based on process-specific flue gas flow.
+            # Includes compressor and CO2 cooler costs scaled by output and cost indices.
+            # Returns total project plant cost in dollars.
             proc_ref_flue_gas_aftr_dcc_kg_hr = constants_dict_df["lcoe_proc_ref_flue_gas_aftr_dcc_kg_hr"]
             doe_cap_tpc_b12b_coal_sorbent_hand_subtotal = constants_dict_df["lcoe_doe_cap_tpc_b12b_coal_sorbent_hand_subtotal"]
             doe_cap_tpc_b12b_coal_sorbent_prep_feed_subtotal = constants_dict_df["lcoe_doe_cap_tpc_b12b_coal_sorbent_prep_feed_subtotal"]
@@ -3674,6 +3807,10 @@ if flue_gas == 'SC PC':
         
 
         def Calculate_Cap_TPC_B12A():
+            # Calculates total plant cost (TPC) for a coal-fired baseline NGCC case (B12A).
+            # Scales DOE subsystem costs by flue gas flow using a 0.8 exponent for capacity adjustment.
+            # Includes costs for coal handling, flue gas cleanup, steam turbine, cooling, and more.
+            # Returns the total TPC in dollars.
             proc_ref_flue_gas_aftr_dcc_kg_hr = constants_dict_df["lcoe_proc_ref_flue_gas_aftr_dcc_kg_hr"]
             doe_cap_b12a_coal_sorb_hand_tpc = constants_dict_df["lcoe_doe_cap_b12a_coal_sorb_hand_tpc"]
             doe_cap_b12a_coal_sorb_prep_feed_tpc = constants_dict_df["lcoe_doe_cap_b12a_coal_sorb_prep_feed_tpc"]
@@ -3707,6 +3844,10 @@ if flue_gas == 'SC PC':
 
     
         def Calculate_Whole_CO2_Remove_TASC_dollars(cepci_baseline_user_input, cf_baseline_user_input): 
+            # Calculates the Total As-Spent Cost (TASC) for the full CO2 removal system.
+            # Combines capital costs, fixed/variable O&M, waste disposal, fuel, land, and other components.
+            # Uses CEPCI scaling, flow rates, and annualization to estimate full project expenses.
+            # Returns the final TASC in dollars.
             proc_ref_cf_b31b = constants_dict_df["lcoe_proc_cf_ref_b31b"]
             doe_om_b31b_var_oper_cost_water_per_day = constants_dict_df["lcoe_doe_om_b31b_var_oper_cost_water_per_day"]   
             doe_ref_b32b_raw_wtr_withdrwl_total = constants_dict_df["lcoe_doe_ref_b32b_total_raw_wtr_withdrawl"]
@@ -3747,6 +3888,10 @@ if flue_gas == 'SC PC':
 
 
         def Calculate_TASC_dollars_Wo_Capture_Based(cepci_baseline_user_input, cf_baseline_user_input): 
+            # Calculates the Total As-Spent Cost (TASC) for a plant without CO2 capture.
+            # Includes capital costs, labor, fuel, raw materials, and waste handling.
+            # Adjusts for CEPCI index and annualized cost factors.
+            # Returns TASC in dollars.
             cap_whole_co2_tasc_multip = constants_dict_df["lcoe_cap_whole_co2_tasc_multip"]
             proc_ref_flue_gas_aftr_dcc_kg_hr = constants_dict_df["lcoe_proc_ref_flue_gas_aftr_dcc_kg_hr"]
             cepci_dec_2018 = constants_dict_df["lcoe_cepci_dec_2018"]
@@ -3854,6 +3999,9 @@ if flue_gas == 'SC PC':
 
 
         def Calculate_OM_Fixed_Oper_Cost_Annual_Total_Cost(cepci_baseline_user_input, eng_baseline_user_input, pc_baseline_user_input, lr_baseline_user_input):
+            # Calculates the total fixed O&M (operations and maintenance) cost for one year.
+            # Includes skilled labor, maintenance, administrative overhead, and support costs.
+            # Returns the annual fixed operating cost in dollars.
             lcoe_cap_om_operat_labor_shift_total = constants_dict_df["lcoe_cap_om_operat_labor_shift_total"]
             om_oper_maintenance_labor_burden = constants_dict_df["lcoe_om_oper_maintenance_labor_burden"]
 
@@ -3868,6 +4016,10 @@ if flue_gas == 'SC PC':
 
 
         def Calculate_res_net_power_out_mw():
+            # Calculates the total fixed annual operating and maintenance (O&M) cost.
+            # Includes cost of skilled operators, technician labor, and maintenance burden.
+            # Also adds fixed percentages of capital cost for maintenance and admin overhead.
+            # Final output is the total yearly fixed O&M cost based on CEPCI and labor rate.
             doe_baseline_inputs_E169 = constants_dict_df["lcoe_doe_base_est_aux_load_act_carb_inj_b12b"]
             doe_baseline_inputs_E170 = constants_dict_df["lcoe_doe_base_est_aux_load_ash_handling_b12b"]
             doe_baseline_inputs_E171 = constants_dict_df["lcoe_doe_base_est_aux_load_baghouse_b12b"]
@@ -4093,10 +4245,13 @@ if flue_gas == 'SC PC':
                                             + inputs_D118 + inputs_D119 + inputs_D120 + inputs_D121) / 1000
             res_net_power_out_mw = inp_est_aux_load_tot_gross_pow_mwe - inp_est_aux_load_tot_aux_mwe
             return res_net_power_out_mw
-        st.write(f"1 is {Calculate_res_net_power_out_mw()} should be 775")
         
 
         def Calculate_res_net_power_out_w_o_ccs():
+            # Calculates net power output for a plant without CO2 capture systems (W/O CCS).
+            # Subtracts total auxiliary power demand from the gross steam turbine power output.
+            # Auxiliary loads include pumps, fans, compressors, ash handling, and more.
+            # All values are scaled to user flue gas flow rates and returned in MW.
             doe_input_est_aux_load_activate_carb_inj = constants_dict_df["lcoe_doe_input_est_aux_load_activate_carb_inj"] 
             doe_input_est_aux_load_ash_hand = constants_dict_df["lcoe_doe_input_est_aux_load_ash_hand"] 
             doe_input_est_aux_load_baghouse = constants_dict_df["lcoe_doe_input_est_aux_load_baghouse"] 
@@ -4272,7 +4427,10 @@ if flue_gas == 'SC PC':
             return tsc_baseline_user_input * (res_co2_captured_net_pow_est_aux_load / Calculate_res_net_power_out_mw() / res_annual_hr)
 
 
-        def Calculate_om_co2_remove_by_product_var_operat_cost_annual_total(cepci_baseline_user_input, cf_baseline_user_input, sup_baseline_user_input, eng_baseline_user_input, pc_baseline_user_input):# R54 O%M
+        def Calculate_om_co2_remove_by_product_var_operat_cost_annual_total(cepci_baseline_user_input, cf_baseline_user_input, sup_baseline_user_input, eng_baseline_user_input, pc_baseline_user_input):
+            # Calculates the total annual variable O&M cost for CO2 removal and by-product management.
+            # Includes costs for consumables (e.g. water, ammonia, catalyst), ash handling, gypsum disposal,
+            # and general variable O&M from TPC scaling. All values are scaled by flue gas rate and capacity factor.
             proc_ref_flue_gas_aftr_dcc_kg_hr = constants_dict_df["lcoe_proc_ref_flue_gas_aftr_dcc_kg_hr"]
             om_ref_gypsum_per_unit = constants_dict_df["lcoe_om_ref_gypsum_per_unit"]
             cepci_dec_2018 = constants_dict_df["lcoe_cepci_dec_2018"]
@@ -4383,7 +4541,7 @@ if flue_gas == 'SC PC':
             co2_capture_rate = constants_dict_df["lcoe_co2_capture_rate"]
             
             proc_co2_prod_flow_rt = flue_gas_fr_aft_dcc_UserInput * proc_co2_mass_frac_aftr_dcc * co2_capture_rate
-            res_co2_captured_net_pow_est_aux_load = proc_co2_prod_flow_rt * 24 * 365 / 1000 # E39 Results
+            res_co2_captured_net_pow_est_aux_load = proc_co2_prod_flow_rt * 24 * 365 / 1000 
             lcoe_capital_net_pow_w_o_css = Calculate_om_co2_remove_by_product_var_operat_cost_annual_total(cepci_baseline_user_input, cf_baseline_user_input, sup_baseline_user_input, eng_baseline_user_input, pc_baseline_user_input) / (Calculate_res_net_power_out_w_o_ccs() * res_annual_hr * cf_baseline_user_input)
             return (Calculate_SC_PC_LCOE_Var_Op(cepci_baseline_user_input, eng_baseline_user_input, pc_baseline_user_input, cf_baseline_user_input, sup_baseline_user_input) - lcoe_capital_net_pow_w_o_css) / (res_co2_captured_net_pow_est_aux_load / Calculate_res_net_power_out_mw() / res_annual_hr)
         
@@ -4639,7 +4797,6 @@ if flue_gas == 'SC PC':
                 st.plotly_chart(fig)
 
 
-                # Second Graph
                 factors_inc_t = ["Capacity Factor", "FRC", "Coal Price", "CPECI", "Project Contingency", "Transport and Storage Cost", "Eng'g CM. H.O. & Fee", "Solvent Unit Price", "Labor Price"]
                 high_boundary_inc_ts = [co2_avoided_sa_cf_high_boundary, co2_avoided_sa_frc_high_boundary, co2_avoided_sa_cp_high_boundary, co2_avoided_sa_cpeci_high_boundary, co2_avoided_sa_pc_high_boundary, co2_avoided_sa_tsc_high_boundary, co2_avoided_sa_eng_high_boundary, co2_avoided_sa_sup_high_boundary, co2_avoided_sa_lr_high_boundary]
                 low_boundary_inc_ts = [co2_avoided_sa_cf_low_boundary, co2_avoided_sa_frc_low_boundary, co2_avoided_sa_cp_low_boundary, co2_avoided_sa_cpeci_low_boundary, co2_avoided_sa_pc_low_boundary, co2_avoided_sa_tsc_low_boundary, co2_avoided_sa_eng_low_boundary, co2_avoided_sa_sup_low_boundary, co2_avoided_sa_lr_low_boundary]
