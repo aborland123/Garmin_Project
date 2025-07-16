@@ -1,3 +1,13 @@
+Limitations and Considerations
+
+While the vision of integrating AI into Siemens’ turbine inspection process is promising, it comes with real-world challenges that must be acknowledged upfront. One of the most significant limitations is the lack of a large, labeled dataset of turbine component images. Most inspections are currently done by hand, and while some photos may be taken for documentation, they are often inconsistent in angle, quality, or labeling. Since AI classification models rely heavily on high-quality, labeled data, a foundational effort would need to go into creating this dataset from scratch — ideally in partnership with technicians who understand what damage actually looks like.
+
+Another major consideration is the variability of real-world inspection conditions. Lighting, part positioning, surface reflectivity, and technician workflow can all affect how images turn out. A model trained on well-lit, perfectly centered images may not perform well in the dynamic and sometimes chaotic environment of a turbine repair shop. To mitigate this, the system would need to be tested and iteratively improved using actual field data, and the image-capture process should be standardized as much as possible with practical, technician-friendly tools.
+
+There’s also the human element: buy-in from the inspection crew. If the AI tool feels like it’s trying to replace technicians rather than support them, it could be resisted. That’s why this system should be framed as assistive — a second set of eyes that helps log images, flag potential issues, and build visual documentation over time. Early versions of the Streamlit-based app could focus on making technicians’ lives easier: uploading images quickly, tagging parts, and accessing historical images without disrupting their workflow.
+
+Finally, this project is inherently a long-term initiative, and the prototype would be only the first step. It won’t produce a highly accurate, fully deployable model in just one internship cycle. However, it can demonstrate technical feasibility, generate valuable early data, and lay the foundation for a more robust AI inspection tool in the future — one that could eventually integrate with Siemens’ existing digital twin infrastructure to provide both behavioral and visual insights about each turbine’s lifecycle.
+
 🧩 Your work + the digital twin = a full health picture.
 If the twin says, “this turbine’s acting weird” and your image model sees cracks or corrosion, together they can explain, predict, and prevent major failures.
 
