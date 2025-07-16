@@ -1,1 +1,67 @@
 
+Inspection Process Improvement Notes – Siemens Charlotte
+
+Author: [Your Name]
+Internship Role: Data Science & Engineering Intern, EPRI
+Date: [Insert Date]
+
+⸻
+
+Why I’m Writing This
+
+After touring Siemens Charlotte, I was surprised that turbine inspections are still done entirely by hand. There was no use of AI, sensors, or automation — only visual checks, calipers, and tap testing. One technician was even hammering components as part of the inspection. That stuck with me.
+
+My manager encouraged me to document what I would change and how those changes could improve the process. This is a structured version of my thoughts so far.
+
+⸻
+
+What I Observed
+	•	Inspections were fully manual and based on technician experience.
+	•	No digital image capture or computer-assisted defect detection was in use.
+	•	There seemed to be no consistent method for recording visual findings.
+	•	Workflow information was not shared in full detail, but it was made clear that AI was not involved in any way.
+
+⸻
+
+What I Would Build First
+
+The first thing I would build is a simple image classification model that detects whether a turbine component shows signs of visible damage. It would take in high-resolution photos of parts and return a binary prediction: damaged or not.
+
+This model wouldn’t replace inspectors — it would assist them by highlighting suspect areas and creating a consistent visual log. It would also allow Siemens to begin collecting structured image data that could be referenced later.
+
+I would use PyTorch with a pre-trained model (like ResNet), build a basic interface using Streamlit, and run early tests with synthetic or public turbine images until real inspection data becomes available.
+
+⸻
+
+Why It Would Matter
+
+A working classification model would open the door to several improvements:
+	•	Faster triage during inspection
+	•	More consistent judgment across technicians
+	•	Creation of a searchable image archive
+	•	A foundation for tracking part condition over time
+	•	The first step toward automated documentation
+
+Even a small reduction in inspection time per part could make a difference at scale, and having image-based records would improve internal reviews, training, and customer communication.
+
+⸻
+
+What I Would Explore Next
+
+If the initial model worked well, I would expand it to:
+	•	Detect different types of damage (cracks, corrosion, burn marks, etc.)
+	•	Highlight the location of damage in the image
+	•	Estimate severity based on size or pattern
+	•	Compare images across inspection cycles
+	•	Export annotated reports automatically
+
+Beyond that, I would look into linking inspection images to plant operational data — things like runtime hours, temperature logs, or load cycles. If enough examples were connected, it could become possible to reverse engineer why certain damage patterns occur. Over time, this could lead to models that not only detect damage, but predict it before it happens.
+
+⸻
+
+Next Steps I Would Take
+	•	Build the classification model using transfer learning
+	•	Reach out to Siemens for access to real inspection images
+	•	Tour the facility again with a focus on the inspection process
+	•	Begin mapping out how image data might connect to plant operating conditions
+	•	Keep documenting ideas, observations, and improvements
