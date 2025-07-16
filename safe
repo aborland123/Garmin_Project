@@ -1,3 +1,46 @@
+What I Would Do If I Could Change the Inspection Process at Siemens Charlotte
+By [Your Name], Data Science & Engineering Intern
+
+⸻
+
+During a recent tour of Siemens Charlotte, I asked a simple question: “Do you use AI in your turbine inspections?” Their answer surprised me — “No, it’s all done by hand. But if someone wants to come in and explore that, we’d love it.” That single response stuck with me. In an industry as advanced as energy, where turbines power cities and every hour of downtime matters, inspections are still fully manual: visual checks, feel-based assessments, and technician intuition.
+
+If I could change that, I would start by building a basic image classification model to detect visible damage on turbine parts. This model wouldn’t replace experienced inspectors — it would support them. With consistently captured images, it could flag potential defects, standardize visual documentation, and reduce the chances of something being missed. More importantly, it would begin building a visual archive that doesn’t exist today — one that could be used to compare parts over time and improve the consistency of inspections.
+
+But that’s just the beginning.
+
+If I had the support and data access, I’d build something much more powerful:
+	•	Object detection to localize where the damage is
+	•	Severity scoring based on visual features
+	•	Inspection history comparison so inspectors can track wear across years
+	•	Explainable AI overlays (like Grad-CAM) to highlight why the model made its decision
+	•	And eventually, link this visual data to plant-level performance data — allowing us to trace the root causes of damage and start predicting failures before they happen
+
+To enable this, I would also build a lightweight Streamlit app that inspection crews could actually use. It would allow them to:
+	•	Upload images during or after inspections
+	•	Tag the image with part ID, damage notes, and condition
+	•	Leave feedback on the AI model (Was it right? What did it miss?)
+	•	Compare previous inspections to current ones
+It’s not meant to disrupt their workflow — just to digitize and enhance it.
+
+⸻
+
+🚀 Long-Term Vision: What This Could Grow Into
+
+If this initial work proves effective, there’s clear potential to expand:
+	•	A full visual inspection pipeline for Siemens turbines
+	•	An intelligent database that identifies failure trends across fleets
+	•	Automated inspection reports generated from image + AI results
+	•	A new layer of insight that connects wear patterns with plant performance, helping teams understand not just what failed, but why
+	•	And eventually, integration with digital twins and maintenance scheduling platforms for smarter, condition-based servicing
+
+Even building just the classification model would be valuable — but the long-term vision could change how turbine health is understood and maintained across the energy sector.
+
+I know I’m just an intern. But I also know this is the kind of problem that matters — and if I had the opportunity to access inspection image data, talk to the inspection team, and understand their workflow, I believe I could help build a real, working prototype that saves time, reduces risk, and sets the stage for a smarter future in energy reliability.
+
+
+
+
 
 Inspection Process Improvement Notes – Siemens Charlotte
 
